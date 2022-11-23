@@ -1,8 +1,4 @@
 
-# cd C:\Users\User\Downloads
-
-# python -m streamlit run C:\Users\User\Downloads\emo_lex_analysis.py
-
 # imports
 import streamlit as st
 from PIL import Image
@@ -606,10 +602,6 @@ st.set_page_config(page_title="Analiza emocji", layout="wide") # centered wide
 
 #  *********************** sidebar  *********************
 
-def style_css(file):
-    with open(file) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-style_css(r"C:\Users\User\Downloads\LEP_test-main\multi_style.css")
 
 with st.sidebar:
     #st.write('<style>div[class="css-x3qc8o e1fqkh3o3"] > div{background-color: #F3EDF1;}</style>', unsafe_allow_html=True)
