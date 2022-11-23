@@ -675,5 +675,8 @@ if box_testowy:
         num_em = "6"
         author_em = "Paul'a Ekmana"
     st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
-    my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
+    if "Unnamed: 0" in my_data.columns:
+        my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
+    else:
+        my_data = my_data.drop(["argument_lemmatized"], axis=1)
     st.dataframe(my_data)
