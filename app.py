@@ -436,7 +436,7 @@ def average_joined_lexicons(dataframe, emotive_words_column, db_words = "Word"):
 
   db_words: str - name of a column in affective database where words are listed
   '''
-
+  db_emotion_category = "Class"
   affective_database = load_data(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx")
   affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
 
@@ -619,7 +619,7 @@ with st.sidebar:
     #alternative 
     form = st.form("my_form")
     form.write("**Wybierz korpus**")
-    box_testowy = form.checkbox("Testowy korpus", value=False)
+    box_testowy = form.checkbox("Testowy korpus", value=True)
     if box_testowy:
         data = load_dataset("Testowy korpus")
     #add_spacelines(2)
