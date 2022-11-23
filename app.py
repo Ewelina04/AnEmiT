@@ -593,31 +593,38 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
 
 
 import time
-############################
-
 # page config
 st.set_page_config(page_title="Analiza emocji", layout="wide") # centered wide
 
-# multi pages functions
-
 #  *********************** sidebar  *********************
-
-
 with st.sidebar:
-    #st.write('<style>div[class="css-x3qc8o e1fqkh3o3"] > div{background-color: #F3EDF1;}</style>', unsafe_allow_html=True)
+    #standard
+    #st.title("Parametry Analizy")
+    #add_spacelines(1)
+    #st.write("**Wybierz korpus**")
+    #box_testowy = st.checkbox("Testowy korpus", value=False)
+    #if box_testowy:
+        #data = load_dataset("Testowy korpus")
+    #add_spacelines(2)
+    #contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza szczegółowa"))
+    #add_spacelines(1)
+    #contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
 
-    st.title("Parametry Analizy")
-    add_spacelines(1)
-    st.write("**Wybierz korpus**")
-    box_testowy = st.checkbox("Testowy korpus", value=False)
+    #alternative 
+    form = st.form("my_form")
+    form.write("**Wybierz korpus**")
+    box_testowy = form.checkbox("Testowy korpus", value=False)
     if box_testowy:
         data = load_dataset("Testowy korpus")
-    add_spacelines(2)
-
-    contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza szczegółowa"))
-    add_spacelines(1)
-    contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
-
+    #add_spacelines(2)
+    form.write('\n\n\n\n\n')
+    contents_radio = form.radio("**Wybierz analizę**", ("Analiza podstawowa", "Analiza szczegółowa"))
+    form.write('\n\n\n\n\n')
+    #add_spacelines(2)
+    contents_radio2 = form.radio("**Wybierz leksykon**", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    form.write('\n\n\n\n\n\n\n')
+    form.write('\n\n\n\n\n')
+    form.form_submit_button("Analizuj")    
 
 #####################  page content  #####################3
 st.title("Analiza emocji w tekście metodą słownikową")
