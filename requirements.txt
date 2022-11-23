@@ -7,5 +7,5 @@ matplotlib
 seaborn
 sklearn
 openpyxl
-spacy
-en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
+spacy==3.2.0
+https://github.com/explosion/spacy-models/releases/download/pl_core_news_sm-3.2.0/pl_core_news_sm-3.2.0.tar.gz
