@@ -126,7 +126,7 @@ def add_spacelines(number=2):
 @st.cache(allow_output_mutation=True)
 def load_dataset(dataset):
     if dataset == "Testowy korpus":
-        df = load_data(r"C:\Users\User\Downloads\DebateTVP_June.xlsx")
+        df = load_data(r"DebateTVP_June.xlsx")
     return df
 
 
@@ -194,13 +194,13 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
   db_words = "Word"
 
   if database == "NAWL":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\NAWL_full_db.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_words = "NAWL_word"
   elif database == "EMOTION MEANINGS":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\uniq_lemma_Emean.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_words = "lemma"
   else:
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx", index_col=0)
 
 
   affective_database = affective_database[[db_words]]
@@ -237,8 +237,8 @@ def average(dataframe, emotive_words_column, database = "nawl"):
 
   database = database.upper()
 
-  NAWL_db = pd.read_excel(r"C:\Users\User\Downloads\NAWL_full_db.xlsx", index_col=0)
-  Emean_db = pd.read_excel(r"C:\Users\User\Downloads\uniq_lemma_Emean.xlsx", index_col=0)
+  NAWL_db = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
+  Emean_db = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
 
   emean_emotion_values = ['HAP M', 'ANG M', 'SAD M', 'FEA M', 'DIS M', 'VAL M', 'ARO M', 'SUR M', 'TRU M', 'ANT M']
   emean_words = "lemma"
@@ -439,7 +439,7 @@ def average_joined_lexicons(dataframe, emotive_words_column, db_words = "Word"):
   db_words: str - name of a column in affective database where words are listed
   '''
 
-  affective_database = load_data(r"C:\Users\User\Downloads\joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx")
+  affective_database = load_data(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx")
 
   emotion_values = ['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust', 'Valence', 'Arousal']
   used_cols = [db_words] + emotion_values
@@ -536,15 +536,15 @@ def emotion_category(dataframe, emotive_words_column, database = "nawl"):
   db_emotion_category = "Class"
 
   if database == "NAWL":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\NAWL_full_db.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_words = "NAWL_word"
     db_emotion_category = "ED_class"
   elif database == "EMOTION MEANINGS":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\uniq_lemma_Emean.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_words = "lemma"
     db_emotion_category = "classification"
   else:
-    affective_database = load_data(r"C:\Users\User\Downloads\emotion_6-categories_NAWL_Sentimenti_db.xlsx")
+    affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
 
   affective_database = affective_database[[db_words, db_emotion_category]]
   affective_database.set_index(db_words, inplace=True)
@@ -571,13 +571,13 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
   db_emotion_category = "Class"
 
   if database == "NAWL":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\NAWL_full_db.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_emotion_category = "ED_class"
   elif database == "EMOTION MEANINGS":
-    affective_database = pd.read_excel(r"C:\Users\User\Downloads\uniq_lemma_Emean.xlsx", index_col=0)
+    affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_emotion_category = "classification"
   else:
-    affective_database = load_data(r"C:\Users\User\Downloads\emotion_6-categories_NAWL_Sentimenti_db.xlsx")
+    affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
 
   all_categories = affective_database[db_emotion_category].unique().tolist()
 
