@@ -236,89 +236,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
 
   database = database.upper()
 
-  if database == "NAWL":
-    NAWL_db = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
-    NAWL_db = NAWL_db[NAWL_db["ED_class"] != "N"]  
-    nawl_emotion_values = ['hap_M_all', 'ang_M_all', 'sad_M_all', 'fea_M_all', 'dis_M_all', 'val_M_all', 'aro_M_all']
-    nawl_words = "NAWL_word"
-    nawl_cols = [nawl_words] + nawl_emotion_values        
-    affective_database = NAWL_db[nawl_cols]
-    affective_database.set_index(nawl_words, inplace=True)
-
-    happ_all = []
-    ang_all = []
-    sad_all = []
-    fea_all = []
-    dis_all = []
-    val_all = []
-    aro_all = []
-
-    happ_all_vals = []
-    ang_all_vals = []
-    sad_all_vals = []
-    fea_all_vals = []
-    dis_all_vals = []
-    val_all_vals = []
-    aro_all_vals = []
-
-    for emotive_words in dataframe[emotive_words_column]:
-      individual_scores = []
-      values_scores = []
-      for emotion_value in nawl_emotion_values:
-        individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
-        individual_scores.append(individual)
-
-        average = round(np.nanmean(np.array(individual)), 5)
-        values_scores.append(average)
-
-      happ_ind = individual_scores[0]
-      happ_all.append(list(happ_ind))
-      ang_ind = individual_scores[1]
-      ang_all.append(list(ang_ind))
-      sad_ind = individual_scores[2]
-      sad_all.append(list(sad_ind))
-      fea_ind = individual_scores[3]
-      fea_all.append(list(fea_ind))
-      dis_ind = individual_scores[4]
-      dis_all.append(list(dis_ind))
-      val_ind = individual_scores[5]
-      val_all.append(list(val_ind))
-      aro_ind = individual_scores[6]
-      aro_all.append(list(aro_ind))
-
-      happ_val = values_scores[0]
-      happ_all_vals.append(happ_val)
-      ang_val = values_scores[1]
-      ang_all_vals.append(ang_val)
-      sad_val = values_scores[2]
-      sad_all_vals.append(sad_val)
-      fea_val = values_scores[3]
-      fea_all_vals.append(fea_val)
-      dis_val = values_scores[4]
-      dis_all_vals.append(dis_val)
-      val_val = values_scores[5]
-      val_all_vals.append(val_val)
-      aro_val = values_scores[6]
-      aro_all_vals.append(aro_val)
-
-    dataframe["Happiness"] = happ_all_vals
-    dataframe["Anger"] = ang_all_vals
-    dataframe["Sadness"] = sad_all_vals
-    dataframe["Fear"] = fea_all_vals
-    dataframe["Disgust"] = dis_all_vals
-    dataframe["Valence"] = val_all_vals
-    dataframe["Arousal"] = aro_all_vals
-
-    dataframe["Happiness_individual_values"] = happ_all
-    dataframe["Anger_individual_values"] = ang_all
-    dataframe["Sadness_individual_values"] = sad_all
-    dataframe["Fear_individual_values"] = fea_all
-    dataframe["Disgust_individual_values"] = dis_all
-    dataframe["Valence_individual_values"] = val_all
-    dataframe["Arousal_individual_values"] =  aro_all
-
-
-  elif database == "EMOTION MEANINGS":
+  if database == "EMOTION MEANINGS":
     Emean_db = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     Emean_db = Emean_db[Emean_db["classification"] != "NEU" ]
     emean_emotion_values = ['HAP M', 'ANG M', 'SAD M', 'FEA M', 'DIS M', 'VAL M', 'ARO M', 'SUR M', 'TRU M', 'ANT M']
@@ -348,7 +266,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     sur_all_vals = []
     tru_all_vals = []
     ant_all_vals = []
-
 
     for emotive_words in dataframe[emotive_words_column]:
       individual_scores = []
@@ -423,100 +340,97 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     dataframe["Surprise_individual_values"] = sur_all
     dataframe["Trust_individual_values"] = tru_all
     dataframe["Anticipation_individual_values"] = ant_all
-  return dataframe
+  
+  else:
+    if database == "NAWL":
+      NAWL_db = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
+      NAWL_db = NAWL_db[NAWL_db["ED_class"] != "N"]  
+      nawl_emotion_values = ['hap_M_all', 'ang_M_all', 'sad_M_all', 'fea_M_all', 'dis_M_all', 'val_M_all', 'aro_M_all']
+      nawl_words = "NAWL_word"
+      nawl_cols = [nawl_words] + nawl_emotion_values        
+      affective_database = NAWL_db[nawl_cols]
+      affective_database.set_index(nawl_words, inplace=True)
+    else:
+      db_emotion_category = "Class"
+      db_words = 'Word'
+      affective_database = load_data(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx")
+      affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
+      emotion_values = ['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust', 'Valence', 'Arousal']
+      used_cols = [db_words] + emotion_values
+      affective_database = affective_database[used_cols]
+      affective_database.set_index(db_words, inplace=True)
+    
+    happ_all = []
+    ang_all = []
+    sad_all = []
+    fea_all = []
+    dis_all = []
+    val_all = []
+    aro_all = []
 
+    happ_all_vals = []
+    ang_all_vals = []
+    sad_all_vals = []
+    fea_all_vals = []
+    dis_all_vals = []
+    val_all_vals = []
+    aro_all_vals = []
 
-def average_joined_lexicons(dataframe, emotive_words_column, db_words = "Word"):
-  '''Parameters:
-  dataframe: dataframe with your data,
+    for emotive_words in dataframe[emotive_words_column]:
+      individual_scores = []
+      values_scores = []
+      for emotion_value in nawl_emotion_values:
+        individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
+        individual_scores.append(individual)
 
-  emotive_words_column: str - name of a column in dataframe where emotive words are listed,
+        average = round(np.nanmean(np.array(individual)), 5)
+        values_scores.append(average)
 
-  affective_database_path: str - path to a file with affective database,
+      happ_ind = individual_scores[0]
+      happ_all.append(list(happ_ind))
+      ang_ind = individual_scores[1]
+      ang_all.append(list(ang_ind))
+      sad_ind = individual_scores[2]
+      sad_all.append(list(sad_ind))
+      fea_ind = individual_scores[3]
+      fea_all.append(list(fea_ind))
+      dis_ind = individual_scores[4]
+      dis_all.append(list(dis_ind))
+      val_ind = individual_scores[5]
+      val_all.append(list(val_ind))
+      aro_ind = individual_scores[6]
+      aro_all.append(list(aro_ind))
 
-  db_words: str - name of a column in affective database where words are listed
-  '''
-  db_emotion_category = "Class"
-  affective_database = load_data(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx")
-  affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
+      happ_val = values_scores[0]
+      happ_all_vals.append(happ_val)
+      ang_val = values_scores[1]
+      ang_all_vals.append(ang_val)
+      sad_val = values_scores[2]
+      sad_all_vals.append(sad_val)
+      fea_val = values_scores[3]
+      fea_all_vals.append(fea_val)
+      dis_val = values_scores[4]
+      dis_all_vals.append(dis_val)
+      val_val = values_scores[5]
+      val_all_vals.append(val_val)
+      aro_val = values_scores[6]
+      aro_all_vals.append(aro_val)
 
-  emotion_values = ['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust', 'Valence', 'Arousal']
-  used_cols = [db_words] + emotion_values
+    dataframe["Happiness"] = happ_all_vals
+    dataframe["Anger"] = ang_all_vals
+    dataframe["Sadness"] = sad_all_vals
+    dataframe["Fear"] = fea_all_vals
+    dataframe["Disgust"] = dis_all_vals
+    dataframe["Valence"] = val_all_vals
+    dataframe["Arousal"] = aro_all_vals
 
-  affective_database = affective_database[used_cols]
-  affective_database.set_index(db_words, inplace=True)
-
-  happ_all = []
-  ang_all = []
-  sad_all = []
-  fea_all = []
-  dis_all = []
-  val_all = []
-  aro_all = []
-
-  happ_all_vals = []
-  ang_all_vals = []
-  sad_all_vals = []
-  fea_all_vals = []
-  dis_all_vals = []
-  val_all_vals = []
-  aro_all_vals = []
-
-  for emotive_words in dataframe[emotive_words_column]:
-    individual_scores = []
-    values_scores = []
-    for emotion_value in emotion_values:
-      individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
-      individual_scores.append(individual)
-
-      average = round(np.nanmean(np.array(individual)), 5)
-      values_scores.append(average)
-
-    happ_ind = individual_scores[0]
-    happ_all.append(list(happ_ind))
-    ang_ind = individual_scores[1]
-    ang_all.append(list(ang_ind))
-    sad_ind = individual_scores[2]
-    sad_all.append(list(sad_ind))
-    fea_ind = individual_scores[3]
-    fea_all.append(list(fea_ind))
-    dis_ind = individual_scores[4]
-    dis_all.append(list(dis_ind))
-    val_ind = individual_scores[5]
-    val_all.append(list(val_ind))
-    aro_ind = individual_scores[6]
-    aro_all.append(list(aro_ind))
-
-    happ_val = values_scores[0]
-    happ_all_vals.append(happ_val)
-    ang_val = values_scores[1]
-    ang_all_vals.append(ang_val)
-    sad_val = values_scores[2]
-    sad_all_vals.append(sad_val)
-    fea_val = values_scores[3]
-    fea_all_vals.append(fea_val)
-    dis_val = values_scores[4]
-    dis_all_vals.append(dis_val)
-    val_val = values_scores[5]
-    val_all_vals.append(val_val)
-    aro_val = values_scores[6]
-    aro_all_vals.append(aro_val)
-
-  dataframe["Happiness"] = happ_all_vals
-  dataframe["Anger"] = ang_all_vals
-  dataframe["Sadness"] = sad_all_vals
-  dataframe["Fear"] = fea_all_vals
-  dataframe["Disgust"] = dis_all_vals
-  dataframe["Valence"] = val_all_vals
-  dataframe["Arousal"] = aro_all_vals
-
-  dataframe["Happiness_individual"] = happ_all
-  dataframe["Anger_individual"] = ang_all
-  dataframe["Sadness_individual"] = sad_all
-  dataframe["Fear_individual"] = fea_all
-  dataframe["Disgust_individual"] = dis_all
-  dataframe["Valence_individual_values"] = val_all
-  dataframe["Arousal_individual_values"] =  aro_all
+    dataframe["Happiness_individual_values"] = happ_all
+    dataframe["Anger_individual_values"] = ang_all
+    dataframe["Sadness_individual_values"] = sad_all
+    dataframe["Fear_individual_values"] = fea_all
+    dataframe["Disgust_individual_values"] = dis_all
+    dataframe["Valence_individual_values"] = val_all
+    dataframe["Arousal_individual_values"] =  aro_all
   return dataframe
 
 
@@ -671,11 +585,7 @@ if box_testowy:
     my_data = lemmatization(my_data, "argument")
     my_data = find_emotive_words(my_data, content_lemmatized_column = "argument_lemmatized", database = wybrany_leks)
     my_data = emotion_category(my_data, emotive_words_column= "Emotive_words", database = wybrany_leks)
-    if wybrany_leks == "EMEAN-NAWL":
-        my_data = average_joined_lexicons(my_data, emotive_words_column = 'Emotive_words',
-        db_words = "Word")
-    else:
-        my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) # or average_joined_lexicons() function
+    my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) # or average_joined_lexicons() function
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
 
     add_spacelines(2)
