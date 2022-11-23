@@ -687,3 +687,18 @@ if box_testowy:
     else:
         my_data = my_data.drop(["argument_lemmatized"], axis=1)
     st.dataframe(my_data)
+    
+    add_spacelines(2)
+    st.write("#### Pobierz wynik analizy")
+    @st.cache
+    def convert_df(df):
+        # IMPORTANT: Cache the conversion to prevent computation on every rerun
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(my_data)
+    st.download_button(
+        label="Kliknij by pobrać CSV",
+        data=csv,
+        file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
+        mime='text/csv',
+        )    
