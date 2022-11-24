@@ -527,14 +527,13 @@ with st.sidebar:
 
     box_testowy = st.checkbox("Testowy korpus", value=False, key="disabled")        
     box_txt_input = st.checkbox("Wprowadź tekst", value=False)
+    add_spacelines(1)
+    txt_input = st.text_input(label="", value="Oczywiście ze Pan Prezydent to nasza duma narodowa!!", 
+                                 label_visibility=st.session_state.visibility,
+                                 disabled=st.session_state.disabled)
     if box_testowy:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
-        add_spacelines(1)
-        txt_input = st.txt_input(label="", value="Oczywiście ze Pan Prezydent to nasza duma narodowa!!", 
-                                 label_visibility=st.session_state.visibility,
-                                 disabled=st.session_state.disabled,
-                                 )
         txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})        
     add_spacelines(2)
