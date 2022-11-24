@@ -521,13 +521,20 @@ with st.sidebar:
     st.title("Parametry Analizy")
     add_spacelines(1)
     st.write("**Wybierz korpus**")
-    box_testowy = st.checkbox("Testowy korpus", value=False)
+    if "visibility" not in st.session_state:
+        st.session_state.visibility = "visible"
+        st.session_state.disabled = False
+        st.session_state.placeholder = "Oczywiście ze Pan Prezydent to nasza duma narodowa!!"
+    box_testowy = st.checkbox("Testowy korpus", value=False, key="disabled")        
     box_txt_input = st.checkbox("Wprowadź tekst", value=False)
     if box_testowy:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
         add_spacelines(1)
-        txt_input = st.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+        txt_input = st.txt_input(label="", value="", 
+                                 label_visibility=st.session_state.visibility,
+                                 disabled=st.session_state.disabled,
+                                 placeholder=st.session_state.placeholder)
         txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})        
     add_spacelines(2)
