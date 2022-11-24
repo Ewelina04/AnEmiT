@@ -574,7 +574,12 @@ with st.sidebar:
     add_spacelines(1)
     contents_radio = st.radio("Wybierz analizę", ("Metoda słownikowa", "Deep learning model"))
     #add_spacelines(1)
-    if contents_radio == "Metoda słownikowa":
+    if contents_radio == "Deep learning model":
+        from transformers import pipeline
+        model_path = "eevvgg/PaReS-sentimenTw-political-PL"
+        #model_path = "cardiffnlp/xlm-twitter-politics-sentiment"
+
+    elif contents_radio == "Metoda słownikowa":
         contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     add_spacelines(1)
 
@@ -606,7 +611,7 @@ with st.sidebar:
 
 
 #####################  page content  #####################3
-if (box_testowy or box_txt_input) and analise_txt:
+if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Metoda słownikowa":
     wybrany_leks = contents_radio2
     my_data = data.copy()
     if box_testowy:
@@ -622,7 +627,7 @@ if (box_testowy or box_txt_input) and analise_txt:
     my_data = lemmatization(my_data, "argument")
     my_data = find_emotive_words(my_data, content_lemmatized_column = "argument_lemmatized", database = wybrany_leks)
     my_data = emotion_category(my_data, emotive_words_column= "Emotive_words", database = wybrany_leks)
-    my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) # or average_joined_lexicons() function
+    my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) 
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
 
     my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]].apply(lambda x: round(x, 3))
@@ -657,5 +662,41 @@ if (box_testowy or box_txt_input) and analise_txt:
         label="Kliknij by pobrać CSV",
         data=csv,
         file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
+        mime='text/csv',
+        )
+
+elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep learning model":
+    sentiment_task = pipeline(task = "sentiment-analysis", model = model_path, tokenizer = model_path)
+    my_data = data.copy()
+    if box_testowy:
+        my_data = my_data.sample(n=100)
+    my_data = my_data.reset_index(drop=True)
+    st.write("#### Analiza w toku ...")
+
+    my_bar = st.progress(0)
+    for percent_complete in range(100):
+        time.sleep(0.1)
+        my_bar.progress(percent_complete + 1)
+
+    sequence = my_data.argument.to_list()
+    sequence = [str(s) if len(str(s)) < 400 else str(s)[:400] for s in sequence]
+    result = sentiment_task(sequence)
+    labels = [i['label'] for i in result]
+    my_data['sentiment-BERT'] = labels
+    my_data['sentiment-BERT'] = my_data['sentiment-BERT'].map({'Neutral':'neutralny',
+                                                                'Positive':'pozytywny', 'Negative':'negatywny'})
+
+    st.dataframe(my_data)
+    add_spacelines(2)
+    st.write("#### Pobierz wynik analizy")
+    @st.cache
+    def convert_df(df):
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(my_data)
+    st.download_button(
+        label="Kliknij by pobrać CSV",
+        data=csv,
+        file_name=f'wynik_analiza_emocji_PaRes-BERT.csv',
         mime='text/csv',
         )
