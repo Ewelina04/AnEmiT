@@ -513,7 +513,6 @@ with st.expander("Metoda słownikowa"):
     https://link.springer.com/article/10.3758/s13428-021-01697-0
 
     \n
-    \n\n
 
     NAWL:
 
@@ -523,6 +522,13 @@ with st.expander("Metoda słownikowa"):
     https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0132305
 
     https://exp.lobi.nencki.gov.pl/nawl-analysis
+    
+    \n
+    
+    EMEAN-NAWL:
+    
+    Połączony słownik Emotion Meanings i NAWL na wspólnych wymiarach 5 emocji podstawowych, walencji i pobudzenia. 
+    Wyniki analizy opracowano na podstawie skali znormalizowanej.
     """)
 
 add_spacelines(1)
