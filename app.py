@@ -543,10 +543,8 @@ with st.sidebar:
     txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
     if box_testowy:
         data = load_dataset("Testowy korpus")
-        box_txt_input = False
     elif box_txt_input:
         form.write('\n\n')
-        box_testowy = False        
         txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})
     #add_spacelines(2)
@@ -557,7 +555,7 @@ with st.sidebar:
     contents_radio2 = form.radio("**Wybierz leksykon**", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     form.write('\n\n\n\n\n\n\n')
     form.write('\n\n\n\n\n')
-    button_analise = form.form_submit_button("Analizuj")    
+    button_analise = st.form_submit_button("Analizuj")    
 
 #####################  page content  #####################3
 st.title("Analiza emocji w tekście metodą słownikową")
