@@ -536,7 +536,7 @@ with st.sidebar:
     #contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
 
     #alternative 
-    #form = st.form("my_form")
+    form = st.form("my_form")
     #form.write("**Wybierz korpus**")
     #box_testowy = form.checkbox("Testowy korpus", value=False)
     #box_txt_input = form.checkbox("Wprowadź tekst", value=False)
@@ -548,7 +548,7 @@ with st.sidebar:
         #txt_list = [txt_input]
         #data = pd.DataFrame({'argument': txt_list})
     #add_spacelines(2)
-    form.write('\n\n\n\n\n')
+    #form.write('\n\n\n\n\n')
     contents_radio = form.radio("**Wybierz analizę**", ("Analiza podstawowa", "Analiza szczegółowa"))
     form.write('\n\n\n\n\n')
     #add_spacelines(2)
