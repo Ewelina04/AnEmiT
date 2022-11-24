@@ -527,7 +527,6 @@ with st.sidebar:
 
     box_testowy = st.checkbox("Testowy korpus", value=False, key="disabled")        
     box_txt_input = st.checkbox("Wprowadź tekst", value=False)
-    add_spacelines(1)
     txt_input = st.text_input(label="", value="Oczywiście ze Pan Prezydent to nasza duma narodowa!!", 
                                  label_visibility=st.session_state.visibility,
                                  disabled=st.session_state.disabled)
@@ -591,7 +590,8 @@ add_spacelines(3)
 if (box_testowy or box_txt_input):
     wybrany_leks = contents_radio2
     my_data = data.copy()
-    my_data = my_data.sample(n=100)
+    if box_testowy:
+        my_data = my_data.sample(n=100)
     my_data = my_data.reset_index(drop=True)
     st.write("#### Analiza w toku ...")
 
