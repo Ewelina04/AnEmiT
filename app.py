@@ -8,8 +8,6 @@ pd.set_option("max_colwidth", 400)
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-sns.set_theme(style="whitegrid")
-plt.style.use("seaborn-talk")
 
 import spacy
 nlp = spacy.load('pl_core_news_sm')
