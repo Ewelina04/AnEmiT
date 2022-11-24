@@ -14,4 +14,3 @@ torch
 keras
 tensorflow
 laserembeddings
-laserembeddings download-models
