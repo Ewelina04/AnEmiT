@@ -299,25 +299,25 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       ant_all.append(list(ant_ind))
 
       happ_val = values_scores[0]
-      happ_all_vals.append(happ_val)
+      happ_all_vals.append(round(happ_val, 3))
       ang_val = values_scores[1]
-      ang_all_vals.append(ang_val)
+      ang_all_vals.append(round(ang_val, 3))
       sad_val = values_scores[2]
-      sad_all_vals.append(sad_val)
+      sad_all_vals.append(round(sad_val, 3))
       fea_val = values_scores[3]
-      fea_all_vals.append(fea_val)
+      fea_all_vals.append(round(fea_val, 3))
       dis_val = values_scores[4]
-      dis_all_vals.append(dis_val)
+      dis_all_vals.append(round(dis_val, 3))
       val_val = values_scores[5]
-      val_all_vals.append(val_val)
+      val_all_vals.append(round(val_val, 3))
       aro_val = values_scores[6]
-      aro_all_vals.append(aro_val)
+      aro_all_vals.append(round(aro_val, 3))
       sur_val = values_scores[7]
-      sur_all_vals.append(sur_val)
+      sur_all_vals.append(round(sur_val, 3))
       tru_val = values_scores[8]
-      tru_all_vals.append(tru_val)
+      tru_all_vals.append(round(tru_val, 3))
       ant_val = values_scores[9]
-      ant_all_vals.append(ant_val)
+      ant_all_vals.append(round(ant_val, 3))
 
     dataframe["Happiness"] = happ_all_vals
     dataframe["Anger"] = ang_all_vals
