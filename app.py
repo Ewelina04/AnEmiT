@@ -528,7 +528,7 @@ with st.sidebar:
     #form.write("**Wybierz korpus**")
     #box_testowy = form.checkbox("Testowy korpus", value=False)
     #box_txt_input = form.checkbox("Wprowadź tekst", value=False)
-    #txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+    #txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent \nto nasza duma narodowa!!")
     #if box_testowy:
         #data = load_dataset("Testowy korpus")
     #elif box_txt_input:
