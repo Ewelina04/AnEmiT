@@ -543,7 +543,7 @@ with st.sidebar:
     contents_radio2 = form.radio("**Wybierz leksykon**", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     form.write('\n\n\n\n\n\n\n')
     form.write('\n\n\n\n\n')
-    form.form_submit_button("Analizuj")    
+    button_analise = form.form_submit_button("Analizuj")    
 
 #####################  page content  #####################3
 st.title("Analiza emocji w tekście metodą słownikową")
@@ -570,7 +570,7 @@ with st.expander("Leksykony"):
 
 add_spacelines(3)
 
-if box_testowy:
+if box_testowy and button_analise:
     wybrany_leks = contents_radio2
     my_data = data.copy()
     my_data = my_data.sample(n=100)
