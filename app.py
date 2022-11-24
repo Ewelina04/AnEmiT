@@ -540,13 +540,33 @@ add_spacelines(1)
 
 with st.expander("Metoda z użyciem deep learningu"):
     st.write("""
-    Model bazowany na architekturze BERT'a wytrenowany do rozpoznawania 3 kategorii sentymentu: 
+    **eevvgg/PaReS-sentimenTw-political-PL**
+
+    Model bazowany na architekturze BERT'a wytrenowany do rozpoznawania 3 kategorii sentymentu:
     https://huggingface.co/eevvgg/PaReS-sentimenTw-political-PL
 
     BERT:
     Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018).
     Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
 
+    \n
+
+    **cardiffnlp/xlm-twitter-politics-sentiment**
+
+    https://huggingface.co/cardiffnlp/xlm-twitter-politics-sentiment
+
+    \n
+
+    **PaREMO** - currently available
+
+    Model do rozpoznawania 5 emocji podstawowych + kategorii neutralnej. Wykorzystano LASER embeddings jako metodę reprezentacji tekstu oraz 4 W pełni połączonych warstw głębokich (klasa Dense w bibliotece Keras).
+
+    Dense(1024, input_shape=(x_train.shape[1],), activation='relu')\n
+    Dense(512, activation='relu')\n
+    Dense(256, activation='relu')\n
+    Dense(128, activation='relu')\n
+    layers.Dropout(0.4)\n
+    Dense(7, activation='softmax')\n
     """)
 
 add_spacelines(3)
