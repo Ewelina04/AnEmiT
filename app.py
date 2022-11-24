@@ -330,16 +330,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     dataframe["Trust"] = tru_all_vals
     dataframe["Anticipation"] = ant_all_vals
 
-    dataframe["Happiness_individual_values"] = happ_all
-    dataframe["Anger_individual_values"] = ang_all
-    dataframe["Sadness_individual_values"] = sad_all
-    dataframe["Fear_individual_values"] = fea_all
-    dataframe["Disgust_individual_values"] = dis_all
-    dataframe["Valence_individual_values"] = val_all
-    dataframe["Arousal_individual_values"] =  aro_all
-    dataframe["Surprise_individual_values"] = sur_all
-    dataframe["Trust_individual_values"] = tru_all
-    dataframe["Anticipation_individual_values"] = ant_all
   
   else:
     if database == "NAWL":
@@ -383,7 +373,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
         individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
         individual_scores.append(individual)
 
-        average = round(np.nanmean(np.array(individual)), 5)
+        average = round(np.nanmean(np.array(individual)), 3)
         values_scores.append(average)
 
       happ_ind = individual_scores[0]
@@ -402,19 +392,19 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       aro_all.append(list(aro_ind))
 
       happ_val = values_scores[0]
-      happ_all_vals.append(happ_val)
+      happ_all_vals.append(round(happ_val, 3))
       ang_val = values_scores[1]
-      ang_all_vals.append(ang_val)
+      ang_all_vals.append(round(ang_val, 3))
       sad_val = values_scores[2]
-      sad_all_vals.append(sad_val)
+      sad_all_vals.append(round(sad_val, 3))
       fea_val = values_scores[3]
-      fea_all_vals.append(fea_val)
+      fea_all_vals.append(round(fea_val, 3))
       dis_val = values_scores[4]
-      dis_all_vals.append(dis_val)
+      dis_all_vals.append(round(dis_val, 3))
       val_val = values_scores[5]
-      val_all_vals.append(val_val)
+      val_all_vals.append(round(val_val, 3))
       aro_val = values_scores[6]
-      aro_all_vals.append(aro_val)
+      aro_all_vals.append(round(aro_val, 3))
 
     dataframe["Happiness"] = happ_all_vals
     dataframe["Anger"] = ang_all_vals
@@ -423,14 +413,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     dataframe["Disgust"] = dis_all_vals
     dataframe["Valence"] = val_all_vals
     dataframe["Arousal"] = aro_all_vals
-
-    dataframe["Happiness_individual_values"] = happ_all
-    dataframe["Anger_individual_values"] = ang_all
-    dataframe["Sadness_individual_values"] = sad_all
-    dataframe["Fear_individual_values"] = fea_all
-    dataframe["Disgust_individual_values"] = dis_all
-    dataframe["Valence_individual_values"] = val_all
-    dataframe["Arousal_individual_values"] =  aro_all
   return dataframe
 
 
@@ -574,6 +556,7 @@ add_spacelines(3)
 if box_testowy:
     wybrany_leks = contents_radio2
     my_data = data.copy()
+    my_data = my_data.sample(n=100)
     my_data = my_data.reset_index(drop=True)
     st.write("#### Analiza w toku ...")
 
