@@ -524,17 +524,17 @@ with st.sidebar:
     if "visibility" not in st.session_state:
         st.session_state.visibility = "visible"
         st.session_state.disabled = False
-        st.session_state.placeholder = "Oczywiście ze Pan Prezydent to nasza duma narodowa!!"
+
     box_testowy = st.checkbox("Testowy korpus", value=False, key="disabled")        
     box_txt_input = st.checkbox("Wprowadź tekst", value=False)
     if box_testowy:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
         add_spacelines(1)
-        txt_input = st.txt_input(label="", value="", 
+        txt_input = st.txt_input(label="", value="Oczywiście ze Pan Prezydent to nasza duma narodowa!!", 
                                  label_visibility=st.session_state.visibility,
                                  disabled=st.session_state.disabled,
-                                 placeholder=st.session_state.placeholder)
+                                 )
         txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})        
     add_spacelines(2)
@@ -588,8 +588,8 @@ with st.expander("Leksykony"):
 
 
 add_spacelines(3)
-
-if (box_testowy or box_txt_input) and button_analise:
+#button_analise
+if (box_testowy or box_txt_input):
     wybrany_leks = contents_radio2
     my_data = data.copy()
     my_data = my_data.sample(n=100)
