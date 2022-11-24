@@ -546,6 +546,10 @@ with st.expander("Metoda z użyciem deep learningu"):
 
 add_spacelines(3)
 
+from transformers import pipeline
+model_path = "eevvgg/PaReS-sentimenTw-political-PL"
+#model_path = "cardiffnlp/xlm-twitter-politics-sentiment"
+
 
 #  *********************** sidebar  *********************
 with st.sidebar:
@@ -580,12 +584,7 @@ with st.sidebar:
     add_spacelines(1)
     contents_radio = st.radio("Wybierz analizę", ("Metoda słownikowa", "Deep learning model"))
     #add_spacelines(1)
-    if contents_radio == "Deep learning model":
-        from transformers import pipeline
-        model_path = "eevvgg/PaReS-sentimenTw-political-PL"
-        #model_path = "cardiffnlp/xlm-twitter-politics-sentiment"
-
-    elif contents_radio == "Metoda słownikowa":
+    if contents_radio == "Metoda słownikowa":
         contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     add_spacelines(1)
 
