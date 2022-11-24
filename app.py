@@ -520,35 +520,37 @@ with st.sidebar:
     #standard
     st.title("Parametry Analizy")
     add_spacelines(1)
-    st.write("**Wybierz korpus**")
-    box_testowy = st.checkbox("Testowy korpus", value=False)
-    box_txt_input = st.checkbox("Wprowadź tekst", value=False)
-    if box_testowy:
-        data = load_dataset("Testowy korpus")
-    elif box_txt_input:
-        add_spacelines(1)
-        txt_input = st.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
-        txt_list = [txt_input]
-        data = pd.DataFrame({'argument': txt_list})        
-    add_spacelines(2)
+    #st.write("**Wybierz korpus**")
+    #box_testowy = st.checkbox("Testowy korpus", value=False)
+    #box_txt_input = st.checkbox("Wprowadź tekst", value=False)
+    #if box_testowy:
+        #data = load_dataset("Testowy korpus")
+    #elif box_txt_input:
+        #add_spacelines(1)
+        #txt_input = st.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+        #txt_list = [txt_input]
+        #data = pd.DataFrame({'argument': txt_list})        
+    #add_spacelines(2)
     #contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza szczegółowa"))
     #add_spacelines(1)
     #contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
 
     #alternative 
     form = st.form("my_form")
-    #form.write("**Wybierz korpus**")
-    #box_testowy = form.checkbox("Testowy korpus", value=False)
-    #box_txt_input = form.checkbox("Wprowadź tekst", value=False)
-    #if box_testowy:
-        #data = load_dataset("Testowy korpus")
-    #elif box_txt_input:
-        #form.write('\n\n')
-        #txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
-        #txt_list = [txt_input]
-        #data = pd.DataFrame({'argument': txt_list})
+    form.write("**Wybierz korpus**")
+    box_testowy = form.checkbox("Testowy korpus", value=False)
+    box_txt_input = form.checkbox("Wprowadź tekst", value=False)
+    if box_testowy:
+        data = load_dataset("Testowy korpus")
+        box_txt_input = False
+    elif box_txt_input:
+        form.write('\n\n')
+        box_testowy = False
+        txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+        txt_list = [txt_input]
+        data = pd.DataFrame({'argument': txt_list})
     #add_spacelines(2)
-    #form.write('\n\n\n\n\n')
+    form.write('\n\n\n\n\n')
     contents_radio = form.radio("**Wybierz analizę**", ("Analiza podstawowa", "Analiza szczegółowa"))
     form.write('\n\n\n\n\n')
     #add_spacelines(2)
