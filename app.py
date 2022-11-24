@@ -15,13 +15,20 @@ pd.options.mode.chained_assignment = None
 import warnings
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 
-
 import plotly.express as px
 import plotly
 import plotly.graph_objects as go
 import wordcloud
 from wordcloud import WordCloud, STOPWORDS
 
+from keras import layers
+from tensorflow.keras.layers import Dense
+from tensorflow.keras import optimizers
+from keras.models import Sequential
+import tensorflow as tf
+from tensorflow import keras
+from laserembeddings import Laser
+laser = Laser()
 
 # functions
 def make_word_cloud(comment_words, width = 1100, height = 650, colour = "black", colormap = "brg"):
@@ -582,8 +589,13 @@ with st.sidebar:
     add_spacelines(1)
     contents_radio = st.radio("Wybierz analizę", ("Metoda słownikowa", "Deep learning model"))
     #add_spacelines(1)
+    
     if contents_radio == "Metoda słownikowa":
         contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    #elif contents_radio == "Deep learning model":
+        #from transformers import pipeline
+        #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
+                                                                #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
     add_spacelines(1)
 
     st.write("**Kliknij by zacząć analizę**")
@@ -669,7 +681,7 @@ if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Metoda 
         )
 
 elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep learning model":
-    sentiment_task = pipeline(task = "sentiment-analysis", model = model_path, tokenizer = model_path)
+    #sentiment_task = pipeline(task = "sentiment-analysis", model = model_path, tokenizer = model_path)
     my_data = data.copy()
     if box_testowy:
         my_data = my_data.sample(n=100)
@@ -681,14 +693,31 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
     for percent_complete in range(100):
         time.sleep(0.1)
         my_bar.progress(percent_complete + 1)
+    
+    sequence = my_data.argument.apply(str).values
+    if len(sequence) > 500:
+        sequence = sequence[:500]
 
-    sequence = my_data.argument.to_list()
-    sequence = [str(s) if len(str(s)) < 400 else str(s)[:400] for s in sequence]
-    result = sentiment_task(sequence)
-    labels = [i['label'] for i in result]
-    my_data['sentiment-BERT'] = labels
-    my_data['sentiment-BERT'] = my_data['sentiment-BERT'].map({'Neutral':'neutralny',
-                                                                'Positive':'pozytywny', 'Negative':'negatywny'})
+    modelPaREMO = keras.models.load_model(r"PaREMO_model_original.h5")
+    x_df = laser.embed_sentences(sequence, lang='pl')
+    prediction = modelPaREMO.predict(x = x_df, batch_size=128, verbose=0)
+    labels = np.argmax(prediction, axis=1)
+
+    my_data['emocja-PaREMO'] = labels
+    map_emo = {0: 'neutral',
+            1: 'anger',
+            2: 'disgust',
+            3: 'fear',
+            4: 'joy',
+            5: 'sadness',
+            6: 'neutral'}
+    my_data['emocja-PaREMO'] = my_data['emocja-PaREMO'].map(map_emo)
+    #sequence = my_data.argument.to_list()
+    #sequence = [str(s) if len(str(s)) < 400 else str(s)[:400] for s in sequence]
+    #result = sentiment_task(sequence)
+    #labels = [i['label'] for i in result]
+    #my_data['sentiment-BERT'] = labels
+    #my_data['sentiment-BERT'] = my_data['sentiment-BERT'].map({'Neutral':'neutralny','Positive':'pozytywny', 'Negative':'negatywny'})
 
     st.dataframe(my_data)
     add_spacelines(2)
@@ -701,6 +730,6 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
     st.download_button(
         label="Kliknij by pobrać CSV",
         data=csv,
-        file_name=f'wynik_analiza_emocji_PaRes-BERT.csv',
+        file_name=f'wynik_analiza_emocji_PaREMO-deep.csv',
         mime='text/csv',
         )
