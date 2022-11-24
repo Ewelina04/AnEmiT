@@ -299,36 +299,46 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       ant_all.append(list(ant_ind))
 
       happ_val = values_scores[0]
-      happ_all_vals.append(round(happ_val, 3))
+      happ_all_vals.append(happ_val)
       ang_val = values_scores[1]
-      ang_all_vals.append(round(ang_val, 3))
+      ang_all_vals.append(ang_val)
       sad_val = values_scores[2]
-      sad_all_vals.append(round(sad_val, 3))
+      sad_all_vals.append(sad_val)
       fea_val = values_scores[3]
-      fea_all_vals.append(round(fea_val, 3))
+      fea_all_vals.append(fea_val)
       dis_val = values_scores[4]
-      dis_all_vals.append(round(dis_val, 3))
+      dis_all_vals.append(dis_val)
       val_val = values_scores[5]
-      val_all_vals.append(round(val_val, 3))
+      val_all_vals.append(val_val)
       aro_val = values_scores[6]
-      aro_all_vals.append(round(aro_val, 3))
+      aro_all_vals.append(aro_val)
       sur_val = values_scores[7]
-      sur_all_vals.append(round(sur_val, 3))
+      sur_all_vals.append(sur_val)
       tru_val = values_scores[8]
-      tru_all_vals.append(round(tru_val, 3))
+      tru_all_vals.append(tru_val)
       ant_val = values_scores[9]
-      ant_all_vals.append(round(ant_val, 3))
+      ant_all_vals.append(ant_val)
 
     dataframe["Happiness"] = happ_all_vals
+    dataframe["Happiness"] = dataframe["Happiness"].round(3)
     dataframe["Anger"] = ang_all_vals
+    dataframe["Anger"] = dataframe["Anger"].round(3)
     dataframe["Sadness"] = sad_all_vals
+    dataframe["Sadness"] = dataframe["Sadness"].round(3)
     dataframe["Fear"] = fea_all_vals
+    dataframe["Fear"] = dataframe["Fear"].round(3)
     dataframe["Disgust"] = dis_all_vals
+    dataframe["Disgust"] = dataframe["Disgust"].round(3)
     dataframe["Valence"] = val_all_vals
+    dataframe["Valence"] = dataframe["Valence"].round(3)
     dataframe["Arousal"] = aro_all_vals
+    dataframe["Arousal"] = dataframe["Arousal"].round(3)
     dataframe["Surprise"] = sur_all_vals
+    dataframe["Surprise"] = dataframe["Surprise"].round(3)
     dataframe["Trust"] = tru_all_vals
+    dataframe["Trust"] = dataframe["Trust"].round(3)
     dataframe["Anticipation"] = ant_all_vals
+    dataframe["Anticipation"] = dataframe["Anticipation"].round(3)
 
   
   else:
@@ -392,27 +402,34 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       aro_all.append(list(aro_ind))
 
       happ_val = values_scores[0]
-      happ_all_vals.append(round(happ_val, 3))
+      happ_all_vals.append(happ_val)
       ang_val = values_scores[1]
-      ang_all_vals.append(round(ang_val, 3))
+      ang_all_vals.append(ang_val)
       sad_val = values_scores[2]
-      sad_all_vals.append(round(sad_val, 3))
+      sad_all_vals.append(sad_val)
       fea_val = values_scores[3]
-      fea_all_vals.append(round(fea_val, 3))
+      fea_all_vals.append(fea_val)
       dis_val = values_scores[4]
-      dis_all_vals.append(round(dis_val, 3))
+      dis_all_vals.append(dis_val)
       val_val = values_scores[5]
-      val_all_vals.append(round(val_val, 3))
+      val_all_vals.append(val_val)
       aro_val = values_scores[6]
-      aro_all_vals.append(round(aro_val, 3))
+      aro_all_vals.append(aro_val)
 
     dataframe["Happiness"] = happ_all_vals
+    dataframe["Happiness"] = dataframe["Happiness"].round(3)
     dataframe["Anger"] = ang_all_vals
+    dataframe["Anger"] = dataframe["Anger"].round(3)
     dataframe["Sadness"] = sad_all_vals
+    dataframe["Sadness"] = dataframe["Sadness"].round(3)
     dataframe["Fear"] = fea_all_vals
+    dataframe["Fear"] = dataframe["Fear"].round(3)
     dataframe["Disgust"] = dis_all_vals
+    dataframe["Disgust"] = dataframe["Disgust"].round(3)
     dataframe["Valence"] = val_all_vals
+    dataframe["Valence"] = dataframe["Valence"].round(3)
     dataframe["Arousal"] = aro_all_vals
+    dataframe["Arousal"] = dataframe["Arousal"].round(3)
   return dataframe
 
 
