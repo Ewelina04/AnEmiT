@@ -498,32 +498,90 @@ import time
 # page config
 st.set_page_config(page_title="Analiza emocji", layout="wide") # centered wide
 
+#####################  page content  #####################3
+st.title("Analiza emocji w tekście")
+add_spacelines(3)
+
+st.write("#### Metody i narzędzia")
+with st.expander("Metoda słownikowa"):
+    st.write("""
+    Emotion Meanings:
+
+    Wierzba, M., Riegel, M., Kocoń, J., Miłkowski, P., Janz, A., Klessa, K., Juszczyk, K., Konat, B.,
+    Grimling, D., Piasecki, M., et al. (2021). Emotion norms for 6000 polish word meanings with a
+    direct mapping to the polish wordnet. Behavior Research Methods, pages 1–16.
+    https://link.springer.com/article/10.3758/s13428-021-01697-0
+
+    \n
+    \n\n
+
+    NAWL:
+
+    Wierzba, M., Riegel, M., Wypych, M., Jednoróg, K., Turnau, P., Grabowska, A., and Marchewka, A.
+    (2015). Basic Emotions in the Nencki Affective Word List (NAWL BE): New Method of Classifying
+    Emotional Stimuli. PLOS ONE, 10(7):e0132305. \n
+    https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0132305
+
+    https://exp.lobi.nencki.gov.pl/nawl-analysis
+    """)
+
+add_spacelines(1)
+
+with st.expander("Metoda z użyciem deep learningu"):
+    st.write("""
+    Model bazowany na architekturze BERT'a wytrenowany do rozpoznawania 3 kategorii sentymentu: 
+    https://huggingface.co/eevvgg/PaReS-sentimenTw-political-PL
+
+    BERT:
+    Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018).
+    Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
+
+    """)
+
+add_spacelines(3)
+
+
 #  *********************** sidebar  *********************
 with st.sidebar:
     #standard
     st.title("Parametry Analizy")
-    add_spacelines(1)
     st.write("**Wybierz korpus**")
-    if "visibility" not in st.session_state:
-        st.session_state.visibility = "visible"
-        st.session_state.disabled = False
+    if ('test_korpus' and "text_input") not in st.session_state:
+        st.session_state['test_korpus'] = False
+        st.session_state['text_input'] = False
+    if 'placeholder' not in st.session_state:
+        st.session_state['placeholder'] = "Tak wysokiego poziomu hipokryzji w polityce nie było chyba nigdy w III RP!"
 
-    box_testowy = st.checkbox("Testowy korpus", value=False, key="disabled")        
-    box_txt_input = st.checkbox("Wprowadź tekst", value=False)
-    txt_input = st.text_input(label="", value="Oczywiście ze Pan Prezydent to nasza duma narodowa!!", 
-                                 label_visibility=st.session_state.visibility,
-                                 disabled=st.session_state.disabled)
+    box_testowy = st.checkbox("Testowy korpus", value=False,
+                            disabled=st.session_state.text_input, key="test_korpus")
+    box_txt_input = st.checkbox("Własny tekst", value=False,
+                            disabled=st.session_state.test_korpus, key = "text_input")
+
     if box_testowy:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
-        txt_list = [txt_input]
-        data = pd.DataFrame({'argument': txt_list})        
-    add_spacelines(2)
-    contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza szczegółowa"))
+        txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
+        if not txt_input:
+            st.error('Wprowadź tekst do analizy')
+            assert_txt = st.button("Zatwierdź")
+            st.stop()
+        if len(str(txt_input).split("\n")) > 1:
+            txt_list = str(txt_input).split("\n")
+            txt_list = [str(t).strip() for t in txt_list]
+        else:
+            txt_list = [txt_input]
+        data = pd.DataFrame({'argument': txt_list})
     add_spacelines(1)
-    contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    contents_radio = st.radio("Wybierz analizę", ("Metoda słownikowa", "Deep learning model"))
+    #add_spacelines(1)
+    if contents_radio == "Metoda słownikowa":
+        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    add_spacelines(1)
 
-    #alternative 
+    st.write("**Kliknij by zacząć analizę**")
+    analise_txt = st.button("Analizuj")
+
+    #alternative
     #form = st.form("my_form")
     #form.write("**Wybierz korpus**")
     #box_testowy = form.checkbox("Testowy korpus", value=False)
@@ -543,34 +601,12 @@ with st.sidebar:
     #contents_radio2 = form.radio("**Wybierz leksykon**", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     #form.write('\n\n\n\n\n\n\n')
     #form.write('\n\n\n\n\n')
-    #button_analise = st.form_submit_button("Analizuj")    
+    #button_analise = st.form_submit_button("Analizuj")
+
+
 
 #####################  page content  #####################3
-st.title("Analiza emocji w tekście metodą słownikową")
-add_spacelines(3)
-
-st.write("#### Metody i narzędzia")
-with st.expander("Leksykony"):
-    st.write("""
-    Emotion Meanings:
-
-    Wierzba, M., Riegel, M., Kocoń, J., Miłkowski, P., Janz, A., Klessa, K., Juszczyk, K., Konat, B.,
-    Grimling, D., Piasecki, M., et al. (2021). Emotion norms for 6000 polish word meanings with a
-    direct mapping to the polish wordnet. Behavior Research Methods, pages 1–16.
-
-    \n
-
-    NAWL:
-
-    Wierzba, M., Riegel, M., Wypych, M., Jednoróg, K., Turnau, P., Grabowska, A., and Marchewka, A.
-    (2015). Basic Emotions in the Nencki Affective Word List (NAWL BE): New Method of Classifying
-    Emotional Stimuli. PLOS ONE, 10(7):e0132305.
-    """)
-
-
-add_spacelines(3)
-#button_analise
-if (box_testowy or box_txt_input):
+if (box_testowy or box_txt_input) and analise_txt:
     wybrany_leks = contents_radio2
     my_data = data.copy()
     if box_testowy:
@@ -589,9 +625,9 @@ if (box_testowy or box_txt_input):
     my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) # or average_joined_lexicons() function
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
 
-    my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]].round(3)
+    my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]].apply(lambda x: round(x, 3))
     if "Surprise" in my_data.columns:
-        my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]].round(3)    
+        my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]].apply(lambda x: round(x, 3))
     add_spacelines(2)
     st.write("#### Wynik analizy")
     st.write(f"Wybrany leksykon: {wybrany_leks}.")
@@ -607,8 +643,9 @@ if (box_testowy or box_txt_input):
     else:
         my_data = my_data.drop(["argument_lemmatized"], axis=1)
     st.dataframe(my_data)
-    
+
     add_spacelines(2)
+
     st.write("#### Pobierz wynik analizy")
     @st.cache
     def convert_df(df):
@@ -621,4 +658,4 @@ if (box_testowy or box_txt_input):
         data=csv,
         file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
         mime='text/csv',
-        )    
+        )
