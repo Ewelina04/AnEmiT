@@ -320,26 +320,15 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       ant_all_vals.append(ant_val)
 
     dataframe["Happiness"] = happ_all_vals
-    dataframe["Happiness"] = dataframe["Happiness"].round(3)
     dataframe["Anger"] = ang_all_vals
-    dataframe["Anger"] = dataframe["Anger"].round(3)
     dataframe["Sadness"] = sad_all_vals
-    dataframe["Sadness"] = dataframe["Sadness"].round(3)
     dataframe["Fear"] = fea_all_vals
-    dataframe["Fear"] = dataframe["Fear"].round(3)
     dataframe["Disgust"] = dis_all_vals
-    dataframe["Disgust"] = dataframe["Disgust"].round(3)
     dataframe["Valence"] = val_all_vals
-    dataframe["Valence"] = dataframe["Valence"].round(3)
     dataframe["Arousal"] = aro_all_vals
-    dataframe["Arousal"] = dataframe["Arousal"].round(3)
     dataframe["Surprise"] = sur_all_vals
-    dataframe["Surprise"] = dataframe["Surprise"].round(3)
     dataframe["Trust"] = tru_all_vals
-    dataframe["Trust"] = dataframe["Trust"].round(3)
     dataframe["Anticipation"] = ant_all_vals
-    dataframe["Anticipation"] = dataframe["Anticipation"].round(3)
-
   
   else:
     if database == "NAWL":
@@ -417,19 +406,13 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       aro_all_vals.append(aro_val)
 
     dataframe["Happiness"] = happ_all_vals
-    dataframe["Happiness"] = dataframe["Happiness"].round(3)
+    
     dataframe["Anger"] = ang_all_vals
-    dataframe["Anger"] = dataframe["Anger"].round(3)
     dataframe["Sadness"] = sad_all_vals
-    dataframe["Sadness"] = dataframe["Sadness"].round(3)
     dataframe["Fear"] = fea_all_vals
-    dataframe["Fear"] = dataframe["Fear"].round(3)
     dataframe["Disgust"] = dis_all_vals
-    dataframe["Disgust"] = dataframe["Disgust"].round(3)
     dataframe["Valence"] = val_all_vals
-    dataframe["Valence"] = dataframe["Valence"].round(3)
     dataframe["Arousal"] = aro_all_vals
-    dataframe["Arousal"] = dataframe["Arousal"].round(3)
   return dataframe
 
 
@@ -606,6 +589,18 @@ if (box_testowy or box_txt_input):
     my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) # or average_joined_lexicons() function
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
 
+    my_data["Happiness"] = my_data["Happiness"].round(3)
+    my_data["Anger"] = my_data["Anger"].round(3)
+    my_data["Sadness"] = my_data["Sadness"].round(3)
+    my_data["Fear"] = my_data["Fear"].round(3)
+    my_data["Disgust"] = my_data["Disgust"].round(3)
+    my_data["Valence"] = my_data["Valence"].round(3)
+    my_data["Arousal"] = my_data["Arousal"].round(3)
+    if "Surprise" in my_data.columns:
+        my_data["Surprise"] = my_data["Surprise"].round(3)
+        my_data["Anticipation"] = my_data["Anticipation"].round(3)
+        my_data["Trust"] = my_data["Trust"].round(3)    
+    
     add_spacelines(2)
     st.write("#### Wynik analizy")
     st.write(f"Wybrany leksykon: {wybrany_leks}.")
