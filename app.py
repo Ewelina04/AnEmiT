@@ -345,7 +345,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     if database == "NAWL":
       NAWL_db = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
       NAWL_db = NAWL_db[NAWL_db["ED_class"] != "N"]  
-      nawl_emotion_values = ['hap_M_all', 'ang_M_all', 'sad_M_all', 'fea_M_all', 'dis_M_all', 'val_M_all', 'aro_M_all']
+      emotion_values = ['hap_M_all', 'ang_M_all', 'sad_M_all', 'fea_M_all', 'dis_M_all', 'val_M_all', 'aro_M_all']
       nawl_words = "NAWL_word"
       nawl_cols = [nawl_words] + nawl_emotion_values        
       affective_database = NAWL_db[nawl_cols]
@@ -379,7 +379,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     for emotive_words in dataframe[emotive_words_column]:
       individual_scores = []
       values_scores = []
-      for emotion_value in nawl_emotion_values:
+      for emotion_value in emotion_values:
         individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
         individual_scores.append(individual)
 
@@ -532,9 +532,15 @@ with st.sidebar:
     #alternative 
     form = st.form("my_form")
     form.write("**Wybierz korpus**")
-    box_testowy = form.checkbox("Testowy korpus", value=True)
+    box_testowy = form.checkbox("Testowy korpus", value=False)
+    box_txt_input = form.checkbox("Wprowadź tekst", value=False)
     if box_testowy:
         data = load_dataset("Testowy korpus")
+    elif box_txt_input:
+        form.write('\n\n')
+        txt_input = st.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+        txt_list = [txt_input]
+        data = pd.DataFrame({'argument': txt_list})
     #add_spacelines(2)
     form.write('\n\n\n\n\n')
     contents_radio = form.radio("**Wybierz analizę**", ("Analiza podstawowa", "Analiza szczegółowa"))
@@ -570,7 +576,7 @@ with st.expander("Leksykony"):
 
 add_spacelines(3)
 
-if box_testowy and button_analise:
+if (box_testowy or box_txt_input) and button_analise:
     wybrany_leks = contents_radio2
     my_data = data.copy()
     my_data = my_data.sample(n=100)
