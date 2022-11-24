@@ -538,7 +538,7 @@ with st.sidebar:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
         form.write('\n\n')
-        txt_input = st.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
+        txt_input = form.txt_input("Twój tekst", "Oczywiście ze Pan Prezydent to nasza duma narodowa!!")
         txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})
     #add_spacelines(2)
