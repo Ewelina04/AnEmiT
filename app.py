@@ -671,7 +671,11 @@ if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Metoda 
         )
 
 elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep learning model":
-    sentiment_task = pipeline(task = "sentiment-analysis", model = model_path, tokenizer = model_path)
+    @st.cache
+    def load_pipe(model_path = model_path):
+        sentiment_pipe = pipeline(task = "sentiment-analysis", model = model_path, tokenizer = model_path)
+        return sentiment_pipe
+    sentiment_task = load_pipe()
     my_data = data.copy()
     if box_testowy:
         my_data = my_data.sample(n=100)
