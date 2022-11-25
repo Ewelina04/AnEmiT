@@ -668,7 +668,7 @@ with st.sidebar:
     elif box_txt_input:
         txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
         assert_txt = st.button("Zatwierdź")
-        if not (txt_input or assert_txt):
+        if not assert_txt:
             st.error('Wprowadź tekst do analizy')            
             st.stop()
         if len(str(txt_input).split("\n")) > 1:
@@ -693,7 +693,7 @@ with st.sidebar:
     add_spacelines(1)
     st.write("**Kliknij by zacząć analizę**")
     analise_txt = st.button("Analizuj")
-    if not (box_testowy or box_txt_input):
+    if not analise_txt:
         st.stop()    
     
     #alternative
