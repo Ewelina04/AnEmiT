@@ -208,10 +208,10 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
 
   all_emotive_words = []
   if uniq_words == True:
-    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [set(str(x).split()).intersection(set(affective_database_emotive_words))] )
+    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [set(x).intersection(set(affective_database_emotive_words))] )
 
   elif uniq_words == False:
-    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [w for w in str(x).split() if w in affective_database_emotive_words] )
+    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [w for w in x if w in affective_database_emotive_words] )
   return dataframe
 
 
