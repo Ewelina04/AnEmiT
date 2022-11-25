@@ -182,7 +182,7 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
   '''
   database = database.upper()
   db_words = "Word"
-  db_emotion_category = "Class"
+  db_emotion_category = "Emotion"
 
   if database == "NAWL":
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
@@ -194,29 +194,85 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
     db_words = "lemma"
     db_emotion_category = "classification"
     affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
-  else:
+  elif database == "EMEAN-NAWL":
     affective_database = pd.read_excel(r"joined_scaled_filled_0_NAWL-Sentimenti_db.xlsx", index_col=0)
+    db_words = "Word"
+    db_emotion_category = "Class"
     affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
-
+  else:
+    affective_database = load_data(r'nrc_emotion_category.xlsx')
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']))]
 
   affective_database = affective_database[[db_words]]
   affective_database_emotive_words = affective_database[db_words].tolist()
 
   all_emotive_words = []
   if uniq_words == True:
-    for lemmas_list in dataframe[content_lemmatized_column]:
-      emotive_words = set(lemmas_list).intersection(affective_database[db_words])
-      #emotive_words = " ".join(set(lemmas_list).intersection(affective_database[db_words]))
-      all_emotive_words.append(emotive_words)
+    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [set(str(x).split()).intersection(set(affective_database_emotive_words))] )
 
   elif uniq_words == False:
-    for lemmas_list in dataframe[content_lemmatized_column]:
-      emotive_words = [w for w in lemmas_list if w in affective_database_emotive_words]
-      #emotive_words = " ".join([w for w in lemmas_list if w in affective_database_emotive_words])
-      all_emotive_words.append(emotive_words)
-  dataframe["Emotive_words"] = all_emotive_words
+    dataframe['Emotive_words'] = dataframe[content_lemmatized_column].apply(lambda x: [w for w in str(x).split() if w in affective_database_emotive_words] )
   return dataframe
 
+
+def get_valence_scores(data, lemmatized_column, db_words = "Word"):
+  '''Parameters: 
+  dataframe: dataframe with your data,
+
+  lemmatized_column: str - name of a column in dataframe where word-lemmas are listed, 
+  
+  affective_database_path: str - path to a file with affective database, 
+  
+  db_words: str - name of a column in affective database where words are listed, 
+  '''  
+  dataframe = data.copy()
+  affective_database = load_data(affective_database_path)
+
+  emotion_values = ["Valence_standardized"]
+  used_cols = [db_words] + emotion_values
+
+  affective_database_valence = affective_database[used_cols]
+  affective_database_valence.set_index(db_words, inplace=True)
+  affective_database_valence_words = affective_database[ (affective_database.Valence_standardized < -0.5) | (affective_database.Valence_standardized > 1) ][db_words].tolist()
+  neg_words = affective_database[ (affective_database.Valence_standardized < -0.5)][db_words].tolist()
+  pos_words = affective_database[ (affective_database.Valence_standardized > 1)][db_words].tolist()
+  
+  dataframe['valence_words'] = dataframe[lemmatized_column].apply(lambda x: [w for w in x if w in affective_database_valence_words] )
+  dataframe['neg_valence_words'] = dataframe['valence_words'].apply(lambda x: " ".join( [w for w in x if w in neg_words]) )
+  dataframe['pos_valence_words'] = dataframe['valence_words'].apply(lambda x: " ".join( [w for w in x if w in pos_words]) )
+  dataframe = dataframe.drop(['valence_words'], axis=1)
+    
+  neg_valence_scores = []
+  pos_valence_scores = []
+  overall_scores = []
+
+  for words_emo in dataframe[lemmatized_column]:
+    words_emo = [w for w in words_emo if w in affective_database_valence_words]
+    if len(words_emo) > 0:
+      scores = affective_database_valence.loc[words_emo]
+
+      neg_score = scores.where(scores["Valence_standardized"].round(1) < -0.5).count()[0]
+      neg_valence_scores.append(neg_score)
+
+      pos_score = scores.where(scores["Valence_standardized"].round(1) > 1).count()[0]
+      pos_valence_scores.append(pos_score)
+
+      if pos_score > neg_score:
+        overall_scores.append('positive')
+      elif pos_score < neg_score:
+        overall_scores.append('negative')
+      elif pos_score == neg_score:
+        overall_scores.append('neutral')
+    else:
+      neg_score=pos_score=score_ovl = np.NaN
+      overall_scores.append(score_ovl)
+      neg_valence_scores.append(neg_score)
+      pos_valence_scores.append(pos_score)
+
+  dataframe["valence_score"] = overall_scores
+  dataframe["valence_positive_count"] = pos_valence_scores
+  dataframe["valence_negative_count"] = neg_valence_scores
+  return dataframe 
 
 
 def average(dataframe, emotive_words_column, database = "nawl"):
@@ -242,17 +298,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     affective_database = Emean_db[emean_cols]
     affective_database.set_index(emean_words, inplace=True)
 
-    happ_all = []
-    ang_all = []
-    sad_all = []
-    fea_all = []
-    dis_all = []
-    val_all = []
-    aro_all = []
-    sur_all = []
-    tru_all = []
-    ant_all = []
-
     happ_all_vals = []
     ang_all_vals = []
     sad_all_vals = []
@@ -273,27 +318,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
 
         average = round(np.nanmean(np.array(individual)), 5)
         values_scores.append(average)
-
-      happ_ind = individual_scores[0]
-      happ_all.append(list(happ_ind))
-      ang_ind = individual_scores[1]
-      ang_all.append(list(ang_ind))
-      sad_ind = individual_scores[2]
-      sad_all.append(list(sad_ind))
-      fea_ind = individual_scores[3]
-      fea_all.append(list(fea_ind))
-      dis_ind = individual_scores[4]
-      dis_all.append(list(dis_ind))
-      val_ind = individual_scores[5]
-      val_all.append(list(val_ind))
-      aro_ind = individual_scores[6]
-      aro_all.append(list(aro_ind))
-      sur_ind = individual_scores[7]
-      sur_all.append(list(sur_ind))
-      tru_ind = individual_scores[8]
-      tru_all.append(list(tru_ind))
-      ant_ind = individual_scores[9]
-      ant_all.append(list(ant_ind))
 
       happ_val = values_scores[0]
       happ_all_vals.append(happ_val)
@@ -326,6 +350,59 @@ def average(dataframe, emotive_words_column, database = "nawl"):
     dataframe["Surprise"] = sur_all_vals
     dataframe["Trust"] = tru_all_vals
     dataframe["Anticipation"] = ant_all_vals
+    dataframe[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]] = dataframe[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]].apply(lambda x: round(x, 3))
+  
+  elif database == "NRC-EMOLEX":
+    affective_database = load_data(r"nrc_emotion_intensity_df.xlsx")
+    db_words = "word"
+    emotion_values = ['joy', 'anger', 'sadness', 'fear', 'disgust', 'surprise', 'trust', 'anticipation']
+    used_cols = [db_words] + emotion_values
+    affective_database = affective_database[used_cols]
+    aff_db_words = affective_database[db_words].values
+    affective_database.set_index(db_words, inplace=True)
+    happ_all_vals = []
+    ang_all_vals = []
+    sad_all_vals = []
+    fea_all_vals = []
+    dis_all_vals = []
+    val_all_vals = []
+    aro_all_vals = []
+    ant_all_vals = []
+
+    for emotive_words in dataframe[emotive_words_column]:
+        emotive_words = [e for e in emotive_words if e in aff_db_words]
+        values_scores = []
+        for emotion_value in emotion_values:
+            individual = affective_database.loc[emotive_words][emotion_value].to_numpy(dtype=np.float32).flatten()
+            average = round(np.nanmean(np.array(individual)), 5)
+            values_scores.append(average)
+        happ_val = values_scores[0]
+        happ_all_vals.append(happ_val)
+        ang_val = values_scores[1]
+        ang_all_vals.append(ang_val)
+        sad_val = values_scores[2]
+        sad_all_vals.append(sad_val)
+        fea_val = values_scores[3]
+        fea_all_vals.append(fea_val)
+        dis_val = values_scores[4]
+        dis_all_vals.append(dis_val)
+        val_val = values_scores[5]
+        val_all_vals.append(val_val)
+        aro_val = values_scores[6]
+        aro_all_vals.append(aro_val)
+        ant_val = values_scores[7]
+        ant_all_vals.append(ant_val)
+
+    dataframe["joy"] = happ_all_vals
+    dataframe["anger"] = ang_all_vals
+    dataframe["sadness"] = sad_all_vals
+    dataframe["fear"] = fea_all_vals
+    dataframe["disgust"] = dis_all_vals
+    dataframe["surprise"] = val_all_vals
+    dataframe["trust"] = aro_all_vals
+    dataframe["anticipation"] = ant_all_vals
+    dataframe[["joy", "anger", "sadness", "fear", "disgust", "surprise", "trust", "anticipation"]] = dataframe[["joy", "anger", "sadness", "fear", "disgust", "surprise", "trust", "anticipation"]].apply(lambda x: round(x, 3))
+
   
   else:
     if database == "NAWL":
@@ -344,15 +421,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       emotion_values = ['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust', 'Valence', 'Arousal']
       used_cols = [db_words] + emotion_values
       affective_database = affective_database[used_cols]
-      affective_database.set_index(db_words, inplace=True)
-    
-    happ_all = []
-    ang_all = []
-    sad_all = []
-    fea_all = []
-    dis_all = []
-    val_all = []
-    aro_all = []
+      affective_database.set_index(db_words, inplace=True)    
 
     happ_all_vals = []
     ang_all_vals = []
@@ -372,21 +441,6 @@ def average(dataframe, emotive_words_column, database = "nawl"):
         average = round(np.nanmean(np.array(individual)), 3)
         values_scores.append(average)
 
-      happ_ind = individual_scores[0]
-      happ_all.append(list(happ_ind))
-      ang_ind = individual_scores[1]
-      ang_all.append(list(ang_ind))
-      sad_ind = individual_scores[2]
-      sad_all.append(list(sad_ind))
-      fea_ind = individual_scores[3]
-      fea_all.append(list(fea_ind))
-      dis_ind = individual_scores[4]
-      dis_all.append(list(dis_ind))
-      val_ind = individual_scores[5]
-      val_all.append(list(val_ind))
-      aro_ind = individual_scores[6]
-      aro_all.append(list(aro_ind))
-
       happ_val = values_scores[0]
       happ_all_vals.append(happ_val)
       ang_val = values_scores[1]
@@ -402,14 +456,14 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       aro_val = values_scores[6]
       aro_all_vals.append(aro_val)
 
-    dataframe["Happiness"] = happ_all_vals
-    
+    dataframe["Happiness"] = happ_all_vals    
     dataframe["Anger"] = ang_all_vals
     dataframe["Sadness"] = sad_all_vals
     dataframe["Fear"] = fea_all_vals
     dataframe["Disgust"] = dis_all_vals
     dataframe["Valence"] = val_all_vals
     dataframe["Arousal"] = aro_all_vals
+    dataframe[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]] = dataframe[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]].apply(lambda x: round(x, 3))
   return dataframe
 
 
@@ -421,8 +475,6 @@ def emotion_category(dataframe, emotive_words_column, database = "nawl"):
 
   database: str - name of an affective database you want to analyse your data with --> type "nawl" or "EMOTION MEANINGS"
   '''
-  import numpy as np
-
   database = database.upper()
   db_words = "Word"
   db_emotion_category = "Class"
@@ -431,16 +483,15 @@ def emotion_category(dataframe, emotive_words_column, database = "nawl"):
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_words = "NAWL_word"
     db_emotion_category = "ED_class"
-    affective_database = affective_database[affective_database[db_emotion_category] != "N"]
-
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
   elif database == "EMOTION MEANINGS":
     affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_words = "lemma"
     db_emotion_category = "classification"
-    affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
   else:
     affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
-    affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
 
   affective_database = affective_database[[db_words, db_emotion_category]]
   affective_database.set_index(db_words, inplace=True)
@@ -452,6 +503,39 @@ def emotion_category(dataframe, emotive_words_column, database = "nawl"):
     all_emotion_categories.append(emotion_categories)
   dataframe["Emotion_categories"] = all_emotion_categories
   return dataframe
+
+
+
+def emotion_category_en(dataframe, emotive_words_column, db_words = "Word", db_emotion_category = "Emotion"):
+  '''Parameters: 
+  dataframe: dataframe with your data,
+
+  content_lemmatized_column: str - name of a column in dataframe where lemmatized text is located,
+    
+  db_words: str - name of a column in affective database where words are listed,
+
+  db_emotion_category: str - name of the column from affective database from where the categories will be taken
+  '''
+  affective_database = load_data(r"nrc_emotion_category.xlsx")
+  set_of_words = set(affective_database[db_words].values)
+
+  all_emotion_categories = []
+  for emotive_words in dataframe[emotive_words_column]:
+    adjust_emotion_categories = []
+    emotive_words = [e for e in emotive_words if e in set_of_words]
+    for word in emotive_words:
+        emotion_categories = affective_database[affective_database[db_words] == word][db_emotion_category].to_list()
+        emotion_categories = set(emotion_categories)
+        emotion_categories = emotion_categories.intersection({'trust', 'fear', 'sadness', 'anger', 'surprise',
+                                                              'disgust', 'joy', 'anticipation'})
+        if len(emotion_categories) > 0:
+          emotion_categories = list(emotion_categories)
+          adjust_emotion_categories.append(emotion_categories[0])
+        elif len(emotion_categories) < 1:
+          adjust_emotion_categories.append('unclassified')
+    all_emotion_categories.append(adjust_emotion_categories)  
+  dataframe["emotion_categories_NRC"] = all_emotion_categories
+  return dataframe 
 
 
 def count_categories(dataframe, emotion_categories_column, database = "nawl"):
@@ -469,14 +553,17 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
   if database == "NAWL":
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_emotion_category = "ED_class"
-    affective_database = affective_database[affective_database[db_emotion_category] != "N"]
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
   elif database == "EMOTION MEANINGS":
     affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_emotion_category = "classification"
-    affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
-  else:
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+  elif database == "EMEAN-NAWL":
     affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
-    affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+  else:
+    affective_database = load_data(r"nrc_emotion_category.xlsx")
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
 
   all_categories = affective_database[db_emotion_category].unique().tolist()
 
@@ -502,7 +589,7 @@ add_spacelines(3)
 st.write("#### Metody i narzędzia")
 with st.expander("Metoda słownikowa"):
     st.write("""
-    Emotion Meanings:
+    **Emotion Meanings**:
 
     Wierzba, M., Riegel, M., Kocoń, J., Miłkowski, P., Janz, A., Klessa, K., Juszczyk, K., Konat, B.,
     Grimling, D., Piasecki, M., et al. (2021). Emotion norms for 6000 polish word meanings with a
@@ -511,7 +598,7 @@ with st.expander("Metoda słownikowa"):
 
     \n
 
-    NAWL:
+    **NAWL**:
 
     Wierzba, M., Riegel, M., Wypych, M., Jednoróg, K., Turnau, P., Grabowska, A., and Marchewka, A.
     (2015). Basic Emotions in the Nencki Affective Word List (NAWL BE): New Method of Classifying
@@ -522,10 +609,18 @@ with st.expander("Metoda słownikowa"):
     
     \n
     
-    EMEAN-NAWL:
+    **EMEAN-NAWL**:
     
     Połączony słownik Emotion Meanings i NAWL na wspólnych wymiarach 5 emocji podstawowych, walencji i pobudzenia. 
     Wyniki analizy opracowano na podstawie skali znormalizowanej.
+    
+    \n
+    
+    **NRC-EMOLEX**:
+    Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon, Saif Mohammad and Peter Turney.
+    In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California
+    
+    https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
     """)
 
 add_spacelines(1)
@@ -628,13 +723,12 @@ with st.sidebar:
 
 
 #####################  page content  #####################
-if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Analiza podstawowa":
-    #if contents_radio3 == "PL":
-        #wybrany_leks = contents_radio2
-    #else:
-        #wybrany_leks = "NRC EmoLex"
+if (box_testowy or box_txt_input) and analise_txt:
+    if contents_radio3 == "PL":
+        wybrany_leks = contents_radio2
+    else:
+        wybrany_leks = "NRC-EMOLEX"
     my_data = data.copy()
-    wybrany_leks = contents_radio2
     if box_testowy:
         my_data = my_data.sample(n=50)
     my_data = my_data.reset_index(drop=True)
@@ -646,18 +740,23 @@ if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Analiza
         my_bar.progress(percent_complete + 1)
 
     my_data = lemmatization(my_data, "argument")
+    if contents_radio == "Analiza rozszerzona":
+        my_data = get_valence_scores(my_data, lemmatized_column = "argument_lemmatized")
+        my_data['proportion_positive'] = round(my_data.valence_positive_count / my_data.argument_lemmatized.map(len), 3)
+        my_data['proportion_negative'] = round(my_data.valence_negative_count / my_data.argument_lemmatized.map(len), 3)
+                                               
     my_data = find_emotive_words(my_data, content_lemmatized_column = "argument_lemmatized", database = wybrany_leks)
-    my_data = emotion_category(my_data, emotive_words_column= "Emotive_words", database = wybrany_leks)
+    if contents_radio3 == "EN":
+        my_data = emotion_category_en(my_data, emotive_words_column= "Emotive_words")
+    else:                                          
+        my_data = emotion_category(my_data, emotive_words_column= "Emotive_words", database = wybrany_leks)
     my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) 
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
 
-    my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal"]].apply(lambda x: round(x, 3))
-    if "Surprise" in my_data.columns:
-        my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]] = my_data[["Happiness", "Anger", "Sadness", "Fear", "Disgust", "Valence", "Arousal", "Surprise", "Anticipation", "Trust"]].apply(lambda x: round(x, 3))
     add_spacelines(2)
     st.write("#### Wynik analizy")
     st.write(f"Wybrany leksykon: {wybrany_leks}.")
-    if wybrany_leks == 'EMOTION MEANINGS':
+    if wybrany_leks == 'EMOTION MEANINGS' or wybrany_leks == "NRC-EMOLEX":
         num_em = '8'
         author_em = "Roberta Plutchik'a"
     else:
