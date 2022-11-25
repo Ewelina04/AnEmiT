@@ -704,20 +704,15 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
     if len(sequence) > 500:
         sequence = sequence[:500]
 
-    modelPaREMO = keras.models.load_model(r"PaREMO_model_original.h5")
-    x_df = laser.embed_sentences(sequence, lang='pl')
-    prediction = modelPaREMO.predict(x = x_df, batch_size=128, verbose=0)
-    labels = np.argmax(prediction, axis=1)
-
-    my_data['emocja-PaREMO'] = labels
-    map_emo = {0: 'neutral',
-            1: 'anger',
-            2: 'disgust',
-            3: 'fear',
-            4: 'joy',
-            5: 'sadness',
-            6: 'neutral'}
-    my_data['emocja-PaREMO'] = my_data['emocja-PaREMO'].map(map_emo)
+    #modelPaREMO = keras.models.load_model(r"PaREMO_model_original.h5")
+    #x_df = laser.embed_sentences(sequence, lang='pl')
+    #prediction = modelPaREMO.predict(x = x_df, batch_size=128, verbose=0)
+    #labels = np.argmax(prediction, axis=1)
+    
+    #my_data['emocja-PaREMO'] = labels
+    #map_emo = {0: 'neutral',1: 'anger',2: 'disgust',3: 'fear',4: 'joy',5: 'sadness',6: 'neutral'}
+    #my_data['emocja-PaREMO'] = my_data['emocja-PaREMO'].map(map_emo)
+    
     #sequence = my_data.argument.to_list()
     #sequence = [str(s) if len(str(s)) < 400 else str(s)[:400] for s in sequence]
     #result = sentiment_task(sequence)
@@ -736,6 +731,6 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
     st.download_button(
         label="Kliknij by pobrać CSV",
         data=csv,
-        file_name=f'wynik_analiza_emocji_PaREMO-deep.csv',
+        file_name=f'wynik_analiza_emocji_PaRes-deep.csv',
         mime='text/csv',
         )
