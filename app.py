@@ -21,14 +21,6 @@ import plotly.graph_objects as go
 import wordcloud
 from wordcloud import WordCloud, STOPWORDS
 
-from keras import layers
-from tensorflow.keras.layers import Dense
-from tensorflow.keras import optimizers
-from keras.models import Sequential
-import tensorflow as tf
-from tensorflow import keras
-from laserembeddings import Laser
-laser = Laser()
 
 # functions
 def make_word_cloud(comment_words, width = 1100, height = 650, colour = "black", colormap = "brg"):
