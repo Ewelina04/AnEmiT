@@ -554,25 +554,12 @@ with st.expander("Metoda z użyciem deep learningu"):
     **cardiffnlp/xlm-twitter-politics-sentiment**
 
     https://huggingface.co/cardiffnlp/xlm-twitter-politics-sentiment
-
-    \n
-
-    **PaREMO** - currently available
-
-    Model do rozpoznawania 5 emocji podstawowych + kategorii neutralnej. Wykorzystano LASER embeddings jako metodę reprezentacji tekstu oraz 4 W pełni połączonych warstw głębokich (klasa Dense w bibliotece Keras).
-
-    Dense(1024, input_shape=(x_train.shape[1],), activation='relu')\n
-    Dense(512, activation='relu')\n
-    Dense(256, activation='relu')\n
-    Dense(128, activation='relu')\n
-    layers.Dropout(0.4)\n
-    Dense(7, activation='softmax')\n
     """)
 
 add_spacelines(3)
 
-from transformers import pipeline
-model_path = "eevvgg/PaReS-sentimenTw-political-PL"
+#from transformers import pipeline
+#model_path = "eevvgg/PaReS-sentimenTw-political-PL"
 #model_path = "cardiffnlp/xlm-twitter-politics-sentiment"
 
 
@@ -607,11 +594,14 @@ with st.sidebar:
             txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})
     add_spacelines(1)
-    contents_radio = st.radio("Wybierz analizę", ("Metoda słownikowa", "Deep learning model"))
+    contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza rozszerzona"))# ("Metoda słownikowa", "Deep learning model")
     #add_spacelines(1)
     
-    if contents_radio == "Metoda słownikowa":
-        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    if contents_radio == "Analiza podstawowa":        
+        contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
+        if contents_radio3 == "PL":
+            contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+
     #elif contents_radio == "Deep learning model":
         #from transformers import pipeline
         #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
@@ -645,12 +635,16 @@ with st.sidebar:
 
 
 
-#####################  page content  #####################3
-if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Metoda słownikowa":
-    wybrany_leks = contents_radio2
+#####################  page content  #####################
+if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Analiza podstawowa":
+    #if contents_radio3 == "PL":
+        #wybrany_leks = contents_radio2
+    #else:
+        #wybrany_leks = "NRC EmoLex"
     my_data = data.copy()
+    wybrany_leks = contents_radio2
     if box_testowy:
-        my_data = my_data.sample(n=100)
+        my_data = my_data.sample(n=50)
     my_data = my_data.reset_index(drop=True)
     st.write("#### Analiza w toku ...")
 
@@ -675,7 +669,7 @@ if (box_testowy or box_txt_input) and analise_txt and contents_radio == "Metoda 
         num_em = '8'
         author_em = "Roberta Plutchik'a"
     else:
-        num_em = "6"
+        num_em = "5"
         author_em = "Paul'a Ekmana"
     st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
     if "Unnamed: 0" in my_data.columns:
