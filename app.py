@@ -215,7 +215,7 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
   return dataframe
 
 
-def get_valence_scores(data, lemmatized_column, db_words = "Word"):
+def get_valence_scores(data, lemmatized_column, affective_database_path, db_words = "Word"):
   '''Parameters: 
   dataframe: dataframe with your data,
 
@@ -741,7 +741,10 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     my_data = lemmatization(my_data, "argument")
     if contents_radio == "Analiza rozszerzona":
-        my_data = get_valence_scores(my_data, lemmatized_column = "argument_lemmatized")
+        if contents_radio3 == "EN":
+          my_data = get_valence_scores(my_data, affective_database_path = r"anew_val_polarity.xlsx", lemmatized_column = "argument_lemmatized")
+        else:    
+          my_data = get_valence_scores(my_data, affective_database_path = r"valence_db.xlsx", lemmatized_column = "argument_lemmatized")                                               
         my_data['proportion_positive'] = round(my_data.valence_positive_count / my_data.argument_lemmatized.map(len), 3)
         my_data['proportion_negative'] = round(my_data.valence_negative_count / my_data.argument_lemmatized.map(len), 3)
                                                
