@@ -590,7 +590,6 @@ st.write("#### Metody i narzędzia")
 with st.expander("Metoda słownikowa"):
     st.write("""
     **Emotion Meanings**:
-
     Wierzba, M., Riegel, M., Kocoń, J., Miłkowski, P., Janz, A., Klessa, K., Juszczyk, K., Konat, B.,
     Grimling, D., Piasecki, M., et al. (2021). Emotion norms for 6000 polish word meanings with a
     direct mapping to the polish wordnet. Behavior Research Methods, pages 1–16.
@@ -599,7 +598,6 @@ with st.expander("Metoda słownikowa"):
     \n
 
     **NAWL**:
-
     Wierzba, M., Riegel, M., Wypych, M., Jednoróg, K., Turnau, P., Grabowska, A., and Marchewka, A.
     (2015). Basic Emotions in the Nencki Affective Word List (NAWL BE): New Method of Classifying
     Emotional Stimuli. PLOS ONE, 10(7):e0132305. \n
@@ -609,8 +607,7 @@ with st.expander("Metoda słownikowa"):
     
     \n
     
-    **EMEAN-NAWL**:
-    
+    **EMEAN-NAWL**:    
     Połączony słownik Emotion Meanings i NAWL na wspólnych wymiarach 5 emocji podstawowych, walencji i pobudzenia. 
     Wyniki analizy opracowano na podstawie skali znormalizowanej.
     
