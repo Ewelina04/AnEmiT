@@ -483,15 +483,15 @@ def emotion_category(dataframe, emotive_words_column, database = "nawl"):
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_words = "NAWL_word"
     db_emotion_category = "ED_class"
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   elif database == "EMOTION MEANINGS":
     affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_words = "lemma"
     db_emotion_category = "classification"
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   else:
     affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
 
   affective_database = affective_database[[db_words, db_emotion_category]]
   affective_database.set_index(db_words, inplace=True)
@@ -553,17 +553,17 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
   if database == "NAWL":
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
     db_emotion_category = "ED_class"
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   elif database == "EMOTION MEANINGS":
     affective_database = pd.read_excel(r"uniq_lemma_Emean.xlsx", index_col=0)
     db_emotion_category = "classification"
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   elif database == "EMEAN-NAWL":
     affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   else:
     affective_database = load_data(r"nrc_emotion_category.xlsx")
-    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']) ]    
+    affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
 
   all_categories = affective_database[db_emotion_category].unique().tolist()
 
