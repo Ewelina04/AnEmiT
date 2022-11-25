@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import spacy
-nlp = spacy.load('pl_core_news_sm')
+
 pd.options.mode.chained_assignment = None
 import warnings
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
@@ -681,10 +681,12 @@ with st.sidebar:
     contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza rozszerzona"))# ("Metoda słownikowa", "Deep learning model")
     #add_spacelines(1)
     
-    if contents_radio == "Analiza podstawowa":        
-        contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
-        if contents_radio3 == "PL":
-            contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    #if contents_radio == "Analiza podstawowa":        
+    contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
+    if contents_radio3 == "PL":
+        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    else:
+        contents_radio2 = st.radio("Dostępny leksykon", ("NRC-EMOLEX"))
 
     #elif contents_radio == "Deep learning model":
         #from transformers import pipeline
@@ -736,7 +738,10 @@ if (box_testowy or box_txt_input) and analise_txt:
     for percent_complete in range(100):
         time.sleep(0.1)
         my_bar.progress(percent_complete + 1)
-
+    if contents_radio3 == "EN":
+        nlp = spacy.load('en_core_web_sm')
+    else:
+        nlp = spacy.load('pl_core_news_sm')
     my_data = lemmatization(my_data, "argument")
     if contents_radio == "Analiza rozszerzona":
         if contents_radio3 == "EN":
