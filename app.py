@@ -670,9 +670,9 @@ with st.sidebar:
         data = load_dataset("Testowy korpus")
     elif box_txt_input:
         txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
-        if not txt_input:
-            st.error('Wprowadź tekst do analizy')
-            assert_txt = st.button("Zatwierdź")
+        assert_txt = st.button("Zatwierdź")
+        if not (txt_input or assert_txt):
+            st.error('Wprowadź tekst do analizy')            
             st.stop()
         if len(str(txt_input).split("\n")) > 1:
             txt_list = str(txt_input).split("\n")
@@ -694,10 +694,11 @@ with st.sidebar:
         #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
                                                                 #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
     add_spacelines(1)
-
     st.write("**Kliknij by zacząć analizę**")
     analise_txt = st.button("Analizuj")
-
+    if not (box_testowy or box_txt_input):
+        st.stop()    
+    
     #alternative
     #form = st.form("my_form")
     #form.write("**Wybierz korpus**")
