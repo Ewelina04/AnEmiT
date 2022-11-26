@@ -410,7 +410,7 @@ def average(dataframe, emotive_words_column, database = "nawl"):
       NAWL_db = NAWL_db[NAWL_db["ED_class"] != "N"]  
       emotion_values = ['hap_M_all', 'ang_M_all', 'sad_M_all', 'fea_M_all', 'dis_M_all', 'val_M_all', 'aro_M_all']
       nawl_words = "NAWL_word"
-      nawl_cols = [nawl_words] + nawl_emotion_values        
+      nawl_cols = [nawl_words] + emotion_values        
       affective_database = NAWL_db[nawl_cols]
       affective_database.set_index(nawl_words, inplace=True)
     else:
