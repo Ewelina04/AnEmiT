@@ -686,7 +686,7 @@ with st.sidebar:
     if contents_radio3 == "PL":
         contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
     else:
-        contents_radio2 = st.radio("Dostępny leksykon", ("NRC-EMOLEX"))
+        contents_radio2 = st.radio("Dostępny leksykon", {"NRC-EMOLEX"})
 
     #elif contents_radio == "Deep learning model":
         #from transformers import pipeline
