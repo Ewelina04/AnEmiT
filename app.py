@@ -563,7 +563,7 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   else:
     affective_database = load_data(r"nrc_emotion_category.xlsx")
-    db_emotion_category = "emotion"
+    db_emotion_category = "Emotion"
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
 
   all_categories = affective_database[db_emotion_category].unique().tolist()
