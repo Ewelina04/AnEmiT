@@ -534,7 +534,7 @@ def emotion_category_en(dataframe, emotive_words_column, db_words = "Word", db_e
         elif len(emotion_categories) < 1:
           adjust_emotion_categories.append('unclassified')
     all_emotion_categories.append(adjust_emotion_categories)  
-  dataframe["emotion_categories_NRC"] = all_emotion_categories
+  dataframe["Emotion_categories"] = all_emotion_categories
   return dataframe 
 
 
@@ -548,7 +548,6 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
   '''
   database = database.upper()
   db_words = "Word"
-  db_emotion_category = "Class"
 
   if database == "NAWL":
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
@@ -560,9 +559,11 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   elif database == "EMEAN-NAWL":
     affective_database = load_data(r"emotion_6-categories_NAWL_Sentimenti_db.xlsx")
+    db_emotion_category = "Class"
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
   else:
     affective_database = load_data(r"nrc_emotion_category.xlsx")
+    db_emotion_category = "emotion"
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative'])) ]    
 
   all_categories = affective_database[db_emotion_category].unique().tolist()
