@@ -674,7 +674,7 @@ with st.sidebar:
             st.stop()
         if len(str(txt_input).split("\n")) > 1:
             txt_list = str(txt_input).split("\n")
-            txt_list = [str(t).strip() for t in txt_list]
+            txt_list = [str(t).strip() for t in txt_list if len(str(t)) > 2]
         else:
             txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})
