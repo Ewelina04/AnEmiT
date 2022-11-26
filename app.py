@@ -182,7 +182,6 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
   '''
   database = database.upper()
   db_words = "Word"
-  db_emotion_category = "Emotion"
 
   if database == "NAWL":
     affective_database = pd.read_excel(r"NAWL_full_db.xlsx", index_col=0)
@@ -201,6 +200,7 @@ def find_emotive_words(dataframe, content_lemmatized_column, uniq_words=False, d
     affective_database = affective_database[affective_database[db_emotion_category] != "NEU" ]
   else:
     affective_database = load_data(r'nrc_emotion_category.xlsx')
+    db_emotion_category = "Emotion"
     affective_database = affective_database[ ~(affective_database[db_emotion_category].isin(['NEU', 'N', 'positive', 'negative']))]
 
   affective_database = affective_database[[db_words]]
