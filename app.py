@@ -691,7 +691,7 @@ with st.sidebar:
         txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
         assert_txt = st.button("Zatwierdź")
         if not (assert_txt or txt_input):
-            st.error('Wprowadź tekst do analizy. \n Fragmenty tekstu, które chcesz traktować jako jednostkę analizy (np. zdania jako jednostka tekstu) rozpocznij od nowej linii (rodziel Enterem).')            
+            st.error('Wprowadź tekst do analizy. Fragmenty tekstu, które chcesz traktować jako jednostkę analizy (np. zdania, paragrafy) rozpocznij od nowej linii (rodziel Enterem).')            
             st.stop()
         if len(str(txt_input).split("\n")) > 1:
             txt_list = str(txt_input).split("\n")
