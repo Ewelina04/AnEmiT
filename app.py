@@ -654,19 +654,23 @@ add_spacelines(3)
 with st.sidebar:
     #standard
     st.title("Parametry Analizy")
+    add_spacelines(1)
     
     contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
+    add_spacelines(1)
+    
     if contents_radio3 == "PL":
         contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+        add_spacelines(1)
     else:
         contents_radio2 = st.radio("Dostępny leksykon", {"NRC-EMOLEX"})
-
+        add_spacelines(1)
     #elif contents_radio == "Deep learning model":
         #from transformers import pipeline
         #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
                                                                 #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
-            
-    
+        #add_spacelines(1)
+                
     st.write("**Wybierz korpus**")
     if ('test_korpus' and "text_input") not in st.session_state:
         st.session_state['test_korpus'] = False
@@ -697,9 +701,8 @@ with st.sidebar:
         data = pd.DataFrame({'argument': txt_list})
     add_spacelines(1)
     contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza rozszerzona"))# ("Metoda słownikowa", "Deep learning model")
-    #add_spacelines(1)
-    
     add_spacelines(1)
+    
     st.write("**Kliknij by zacząć analizę**")
     analise_txt = st.button("Analizuj")
     if not analise_txt:
