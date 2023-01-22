@@ -131,6 +131,8 @@ def add_spacelines(number=2):
 def load_dataset(dataset):
     if dataset == "Testowy korpus":
         df = load_data(r"DebateTVP_June.xlsx")
+    else:
+        df = load_data(r"en_sample.xlsx")        
     return df
 
 
@@ -652,6 +654,19 @@ add_spacelines(3)
 with st.sidebar:
     #standard
     st.title("Parametry Analizy")
+    
+    contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
+    if contents_radio3 == "PL":
+        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+    else:
+        contents_radio2 = st.radio("Dostępny leksykon", {"NRC-EMOLEX"})
+
+    #elif contents_radio == "Deep learning model":
+        #from transformers import pipeline
+        #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
+                                                                #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
+            
+    
     st.write("**Wybierz korpus**")
     if ('test_korpus' and "text_input") not in st.session_state:
         st.session_state['test_korpus'] = False
@@ -664,8 +679,10 @@ with st.sidebar:
     box_txt_input = st.checkbox("Własny tekst", value=False,
                             disabled=st.session_state.test_korpus, key = "text_input")
 
-    if box_testowy:
+    if box_testowy and contents_radio3 == "PL":
         data = load_dataset("Testowy korpus")
+    elif box_testowy and contents_radio3 == "EN":
+        data = load_dataset("Testowy korpus en")        
     elif box_txt_input:
         txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
         assert_txt = st.button("Zatwierdź")
@@ -682,17 +699,6 @@ with st.sidebar:
     contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza rozszerzona"))# ("Metoda słownikowa", "Deep learning model")
     #add_spacelines(1)
     
-    #if contents_radio == "Analiza podstawowa":        
-    contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
-    if contents_radio3 == "PL":
-        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
-    else:
-        contents_radio2 = st.radio("Dostępny leksykon", {"NRC-EMOLEX"})
-
-    #elif contents_radio == "Deep learning model":
-        #from transformers import pipeline
-        #contents_radio_bert_deep = st.radio("Wybierz model", ("eevvgg/PaReS-sentimenTw-political-PL",
-                                                                #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
     add_spacelines(1)
     st.write("**Kliknij by zacząć analizę**")
     analise_txt = st.button("Analizuj")
