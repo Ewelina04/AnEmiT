@@ -603,7 +603,7 @@ with st.expander("Metoda słownikowa"):
     **NAWL**:
     Wierzba, M., Riegel, M., Wypych, M., Jednoróg, K., Turnau, P., Grabowska, A., and Marchewka, A.
     (2015). Basic Emotions in the Nencki Affective Word List (NAWL BE): New Method of Classifying
-    Emotional Stimuli. PLOS ONE, 10(7):e0132305. \n
+    Emotional Stimuli. PLOS ONE, 10(7): e0132305. 
     https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0132305
 
     https://exp.lobi.nencki.gov.pl/nawl-analysis
@@ -623,25 +623,24 @@ with st.expander("Metoda słownikowa"):
     https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
     """)
 
-add_spacelines(1)
+#add_spacelines(1)
+#with st.expander("Metoda z użyciem deep learningu"):
+#    st.write("""
+#    **eevvgg/PaReS-sentimenTw-political-PL**
 
-with st.expander("Metoda z użyciem deep learningu"):
-    st.write("""
-    **eevvgg/PaReS-sentimenTw-political-PL**
+#    Model bazowany na architekturze BERT'a wytrenowany do rozpoznawania 3 kategorii sentymentu:
+#    https://huggingface.co/eevvgg/PaReS-sentimenTw-political-PL
 
-    Model bazowany na architekturze BERT'a wytrenowany do rozpoznawania 3 kategorii sentymentu:
-    https://huggingface.co/eevvgg/PaReS-sentimenTw-political-PL
+#    BERT:
+#    Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018).
+#    Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
 
-    BERT:
-    Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018).
-    Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
+#    \n
 
-    \n
+#    **cardiffnlp/xlm-twitter-politics-sentiment**
 
-    **cardiffnlp/xlm-twitter-politics-sentiment**
-
-    https://huggingface.co/cardiffnlp/xlm-twitter-politics-sentiment
-    """)
+#    https://huggingface.co/cardiffnlp/xlm-twitter-politics-sentiment
+#    """)
 
 add_spacelines(3)
 
