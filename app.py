@@ -783,10 +783,7 @@ if (box_testowy or box_txt_input) and analise_txt:
     else:
         num_em = "5"
         author_em = "Paul'a Ekmana"
-        try:
-            my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
-        except:            
-            continue
+        my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
         
     st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
     if "Unnamed: 0" in my_data.columns:
