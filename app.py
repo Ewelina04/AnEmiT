@@ -767,7 +767,7 @@ if (box_testowy or box_txt_input) and analise_txt:
         my_data = emotion_category(my_data, emotive_words_column= "Emotive_words", database = wybrany_leks)
     my_data = average(my_data, emotive_words_column = "Emotive_words", database = wybrany_leks) 
     my_data = count_categories(my_data, "Emotion_categories", database = wybrany_leks)
-    my_data = my_data.rename(columns = {"argument":"text"})
+    my_data = my_data.rename(columns = {"argument":"text"})    
 
     add_spacelines(2)
     st.write("#### Wynik analizy")
@@ -775,9 +775,19 @@ if (box_testowy or box_txt_input) and analise_txt:
     if wybrany_leks == 'EMOTION MEANINGS' or wybrany_leks == "NRC-EMOLEX":
         num_em = '8'
         author_em = "Roberta Plutchik'a"
+        try:
+            my_data['dominant_emotion'] = my_data[['joy', 'anger', 'sadness', 'fear', 'disgust', 'surprise', 'trust', 'anticipation']].idxmax(axis="columns")
+        except:
+            my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust', 'Surprise', 'Trust', 'Anticipation']].idxmax(axis="columns")
+            
     else:
         num_em = "5"
         author_em = "Paul'a Ekmana"
+        try:
+            my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
+        except:
+            continue
+        
     st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
     if "Unnamed: 0" in my_data.columns:
         my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
