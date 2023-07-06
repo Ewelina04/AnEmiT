@@ -583,13 +583,13 @@ def count_categories(dataframe, emotion_categories_column, database = "nawl"):
 
 import time
 # page config
-st.set_page_config(page_title="Analiza emocji", layout="wide") # centered wide
+st.set_page_config(page_title="Sentiment Analysis", layout="wide") # centered wide
 
 #####################  page content  #####################3
-st.title("Analiza emocji w tekście")
+st.title("Analiza emocji w tekście [Sentiment Analysis in Text]")
 add_spacelines(3)
 
-st.write("#### Metody i narzędzia")
+st.write("#### Metody i narzędzia [Methods and tools]")
 with st.expander("Metoda słownikowa"):
     st.write("""
     **Emotion Meanings**:
@@ -612,7 +612,8 @@ with st.expander("Metoda słownikowa"):
     
     **EMEAN-NAWL**:    
     Połączony słownik Emotion Meanings i NAWL na wspólnych wymiarach 5 emocji podstawowych, walencji i pobudzenia. 
-    Wyniki analizy opracowano na podstawie skali znormalizowanej.
+    Wyniki analizy opracowano na podstawie skali znormalizowanej. [A dictionary that is a combination of Emotion Meanings and NAWL lexicons. 
+    Analysis with 5 basic emotions plus affective valence and arousal is available for this dictionary.]
     
     \n
     
@@ -652,17 +653,17 @@ add_spacelines(3)
 #  *********************** sidebar  *********************
 with st.sidebar:
     #standard
-    st.title("Parametry Analizy")
+    st.title("Parametry Analizy [Parameters of Analusis]")
     add_spacelines(1)
     
-    contents_radio3 = st.radio("Wybierz język dla tekstu", ("PL", "EN"))
+    contents_radio3 = st.radio("Wybierz język dla tekstu [Choose language of the analysed text]", ("PL", "EN"))
     add_spacelines(1)
     
     if contents_radio3 == "PL":
-        contents_radio2 = st.radio("Wybierz leksykon", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
+        contents_radio2 = st.radio("Wybierz leksykon [Choose a dictionary]", ("EMOTION MEANINGS", "NAWL", "EMEAN-NAWL"))
         add_spacelines(1)
     else:
-        contents_radio2 = st.radio("Dostępny leksykon", {"NRC-EMOLEX"})
+        contents_radio2 = st.radio("Dostępny leksykon [Available dictionary]", {"NRC-EMOLEX"})
         add_spacelines(1)
     #elif contents_radio == "Deep learning model":
         #from transformers import pipeline
@@ -670,16 +671,16 @@ with st.sidebar:
                                                                 #"cardiffnlp/xlm-twitter-politics-sentiment", "PaREMO"))
         #add_spacelines(1)
                 
-    st.write("**Wybierz korpus**")
+    st.write("**Wybierz korpus** [Choose corpora]")
     if ('test_korpus' and "text_input") not in st.session_state:
         st.session_state['test_korpus'] = False
         st.session_state['text_input'] = False
     if 'placeholder' not in st.session_state:
         st.session_state['placeholder'] = "Tak wysokiego poziomu hipokryzji w polityce nie było chyba nigdy w III RP!"
 
-    box_testowy = st.checkbox("Testowy korpus", value=False,
+    box_testowy = st.checkbox("Testowy korpus [Sample corpora]", value=False,
                             disabled=st.session_state.text_input, key="test_korpus")
-    box_txt_input = st.checkbox("Własny tekst", value=False,
+    box_txt_input = st.checkbox("Własny tekst [Own corpora]", value=False,
                             disabled=st.session_state.test_korpus, key = "text_input")
 
     if box_testowy and contents_radio3 == "PL":
@@ -687,10 +688,10 @@ with st.sidebar:
     elif box_testowy and contents_radio3 == "EN":
         data = load_dataset("Testowy korpus en")        
     elif box_txt_input:
-        txt_input = st.text_area(label="Wprowadź tekst", placeholder = st.session_state.placeholder, height = 20)
-        assert_txt = st.button("Zatwierdź")
+        txt_input = st.text_area(label="Wprowadź tekst [Insert text]", placeholder = st.session_state.placeholder, height = 20)
+        assert_txt = st.button("Zatwierdź [Confirm]")
         if not (assert_txt or txt_input):
-            st.error('Wprowadź tekst do analizy. Fragmenty tekstu, które chcesz traktować jako jednostkę analizy (np. zdania, paragrafy) rozpocznij od nowej linii (rodziel Enterem).')            
+            st.error('''Wprowadź tekst do analizy. Fragmenty tekstu, które chcesz traktować jako jednostkę analizy (np. zdania, paragrafy) rozpocznij od nowej linii (rozdziel Enterem). [Insert text for the analysis. Sentences started with a new line character ("Enter") will be trated as separate units of analysis (separate rows in the returned Excel file)].''')
             st.stop()
         if len(str(txt_input).split("\n")) > 1:
             txt_list = str(txt_input).split("\n")
@@ -699,11 +700,11 @@ with st.sidebar:
             txt_list = [txt_input]
         data = pd.DataFrame({'argument': txt_list})
     add_spacelines(1)
-    contents_radio = st.radio("Wybierz analizę", ("Analiza podstawowa", "Analiza rozszerzona"))# ("Metoda słownikowa", "Deep learning model")
+    contents_radio = st.radio("Wybierz analizę [Choose type of analysis]", ("Analiza podstawowa [Basic analysis]", "Analiza rozszerzona [Extended analysis]"))# ("Metoda słownikowa", "Deep learning model")
     add_spacelines(1)
     
-    st.write("**Kliknij by zacząć analizę**")
-    analise_txt = st.button("Analizuj")
+    st.write("**Kliknij by zacząć analizę** [Click to start the analysis]")
+    analise_txt = st.button("Analizuj [Analyse]")
     if not analise_txt:
         st.stop()    
     
@@ -752,7 +753,7 @@ if (box_testowy or box_txt_input) and analise_txt:
     else:
         nlp = spacy.load('pl_core_news_sm')
     my_data = lemmatization(my_data, "argument")
-    if contents_radio == "Analiza rozszerzona":
+    if contents_radio == "Analiza rozszerzona [Extended analysis]":
         if contents_radio3 == "EN":
           my_data = get_valence_scores(my_data, affective_database_path = r"anew_val_polarity.xlsx", lemmatized_column = "argument_lemmatized")
         else:    
@@ -770,11 +771,12 @@ if (box_testowy or box_txt_input) and analise_txt:
     my_data = my_data.rename(columns = {"argument":"text"})    
 
     add_spacelines(2)
-    st.write("#### Wynik analizy")
-    st.write(f"Wybrany leksykon: {wybrany_leks}.")
+    st.write("#### Wynik analizy [Results of analysis]")
+    st.write(f"Wybrany leksykon [Chosen dictionary]: {wybrany_leks}.")
     if wybrany_leks == 'EMOTION MEANINGS' or wybrany_leks == "NRC-EMOLEX":
         num_em = '8'
         author_em = "Roberta Plutchik'a"
+        author_em2 = "Robert Plutchik"
         try:
             my_data['dominant_emotion'] = my_data[['joy', 'anger', 'sadness', 'fear', 'disgust', 'surprise', 'trust', 'anticipation']].idxmax(axis="columns")
         except:
@@ -783,9 +785,12 @@ if (box_testowy or box_txt_input) and analise_txt:
     else:
         num_em = "5"
         author_em = "Paul'a Ekmana"
+        author_em2 = "Paul Ekman"
         my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
         
     st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
+    st.write(f"Analysis was conducted for {num_em} basic emotions according to {author_em2}'s model.")
+    
     if "Unnamed: 0" in my_data.columns:
         my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
     else:
@@ -802,7 +807,7 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV",
+        label="Kliknij by pobrać CSV [Click to download results]",
         data=csv,
         file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
         mime='text/csv',
@@ -815,7 +820,7 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
         my_data = my_data.sample(n=100)
     my_data = my_data.reset_index(drop=True)
     my_data = my_data[my_data.argument.str.split().map(len) > 1]
-    st.write("#### Analiza w toku ...")
+    st.write("#### Analiza w toku [Analysing] ...")
 
     my_bar = st.progress(0)
     for percent_complete in range(100):
@@ -844,14 +849,14 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
 
     st.dataframe(my_data)
     add_spacelines(2)
-    st.write("#### Pobierz wynik analizy")
+    st.write("#### Pobierz wynik analizy [Download]")
     @st.cache
     def convert_df(df):
         return df.to_csv().encode('utf-8')
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV",
+        label="Kliknij by pobrać CSV [Click to download results]",
         data=csv,
         file_name=f'wynik_analiza_emocji_PaRes-deep.csv',
         mime='text/csv',
