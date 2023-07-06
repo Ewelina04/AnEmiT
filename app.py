@@ -808,7 +808,7 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV [Download results]",
+        label="Kliknij by pobrać CSV [Download]",
         data=csv,
         file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
         mime='text/csv',
@@ -857,7 +857,7 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV [Download results]",
+        label="Kliknij by pobrać CSV [Download]",
         data=csv,
         file_name=f'wynik_analiza_emocji_PaRes-deep.csv',
         mime='text/csv',
