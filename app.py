@@ -655,7 +655,7 @@ add_spacelines(3)
 #  *********************** sidebar  *********************
 with st.sidebar:
     #standard
-    st.title("Parametry Analizy [Parameters of Analusis]")
+    st.title("Parametry Analizy [Parameters of Analysis]")
     add_spacelines(1)
     
     contents_radio3 = st.radio("Wybierz język dla tekstu [Choose language of the analysed text]", ("PL", "EN"))
