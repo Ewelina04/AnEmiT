@@ -5,7 +5,7 @@ wordcloud
 plotly
 matplotlib
 seaborn
-sklearn
+scikit-learn
 openpyxl
 spacy
 https://github.com/explosion/spacy-models/releases/download/pl_core_news_sm-3.4.0/pl_core_news_sm-3.4.0.tar.gz
