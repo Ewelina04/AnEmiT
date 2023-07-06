@@ -590,7 +590,7 @@ st.title("Analiza emocji w tekście [Sentiment Analysis in Text]")
 add_spacelines(3)
 
 st.write("#### Metody i narzędzia [Methods and tools]")
-with st.expander("Metoda słownikowa"):
+with st.expander("Metoda słownikowa [Available dictionaries]"):
     st.write("""
     **Emotion Meanings**:
     Wierzba, M., Riegel, M., Kocoń, J., Miłkowski, P., Janz, A., Klessa, K., Juszczyk, K., Konat, B.,
@@ -612,7 +612,9 @@ with st.expander("Metoda słownikowa"):
     
     **EMEAN-NAWL**:    
     Połączony słownik Emotion Meanings i NAWL na wspólnych wymiarach 5 emocji podstawowych, walencji i pobudzenia. 
-    Wyniki analizy opracowano na podstawie skali znormalizowanej. [A dictionary that is a combination of Emotion Meanings and NAWL lexicons. 
+    Wyniki analizy opracowano na podstawie skali znormalizowanej. 
+    
+    [A dictionary that is a combination of Emotion Meanings and NAWL lexicons. 
     Analysis with 5 basic emotions plus affective valence and arousal is available for this dictionary.]
     
     \n
@@ -742,7 +744,7 @@ if (box_testowy or box_txt_input) and analise_txt:
     if box_testowy:
         my_data = my_data.sample(n=50)
     my_data = my_data.reset_index(drop=True)
-    st.write("#### Analiza w toku ...")
+    st.write("#### Analiza w toku [Analysing] ...")
 
     my_bar = st.progress(0)
     for percent_complete in range(100):
@@ -772,7 +774,7 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     add_spacelines(2)
     st.write("#### Wynik analizy [Results of analysis]")
-    st.write(f"Wybrany leksykon [Chosen dictionary]: {wybrany_leks}.")
+    st.write(f"Wybrany leksykon [Chosen dictionary]: **{wybrany_leks}**.")
     if wybrany_leks == 'EMOTION MEANINGS' or wybrany_leks == "NRC-EMOLEX":
         num_em = '8'
         author_em = "Roberta Plutchik'a"
@@ -788,8 +790,7 @@ if (box_testowy or box_txt_input) and analise_txt:
         author_em2 = "Paul Ekman"
         my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
         
-    st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}.")
-    st.write(f"Analysis was conducted for {num_em} basic emotions according to {author_em2}'s model.")
+    st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}. [Analysis was conducted for {num_em} basic emotions according to {author_em2}'s model.]")
     
     if "Unnamed: 0" in my_data.columns:
         my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
@@ -799,7 +800,7 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     add_spacelines(2)
 
-    st.write("#### Pobierz wynik analizy")
+    st.write("#### Pobierz wynik analizy [Download results]")
     @st.cache
     def convert_df(df):
         # IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -807,7 +808,7 @@ if (box_testowy or box_txt_input) and analise_txt:
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV [Click to download results]",
+        label="Kliknij by pobrać CSV [Download results]",
         data=csv,
         file_name=f'wynik_analiza_emocji-{wybrany_leks}.csv',
         mime='text/csv',
@@ -849,14 +850,14 @@ elif (box_testowy or box_txt_input) and analise_txt and contents_radio == "Deep 
 
     st.dataframe(my_data)
     add_spacelines(2)
-    st.write("#### Pobierz wynik analizy [Download]")
+    st.write("#### Pobierz wynik analizy [Download results]")
     @st.cache
     def convert_df(df):
         return df.to_csv().encode('utf-8')
 
     csv = convert_df(my_data)
     st.download_button(
-        label="Kliknij by pobrać CSV [Click to download results]",
+        label="Kliknij by pobrać CSV [Download results]",
         data=csv,
         file_name=f'wynik_analiza_emocji_PaRes-deep.csv',
         mime='text/csv',
