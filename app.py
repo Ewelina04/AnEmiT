@@ -790,7 +790,7 @@ if (box_testowy or box_txt_input) and analise_txt:
         author_em2 = "Paul Ekman"
         my_data['dominant_emotion'] = my_data[['Happiness', 'Anger', 'Sadness', 'Fear', 'Disgust']].idxmax(axis="columns")
         
-    st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}. [Analysis was conducted for {num_em} basic emotions according to {author_em2}'s model.]")
+    st.write(f"Dokonano analizy tekstu na wymiarze {num_em} emocji podstawowych według modelu {author_em}. \n[Analysis was conducted for {num_em} basic emotions according to {author_em2}'s model.]")
     
     if "Unnamed: 0" in my_data.columns:
         my_data = my_data.drop(["argument_lemmatized", "Unnamed: 0"], axis=1)
